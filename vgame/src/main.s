@@ -8,16 +8,21 @@
 	;==================
 
 .area _CODE
+.include "cpctelera.h.s"
+.include "hero.h.s"
+.include "control.h.s"
 	;==================
 	;;;INCLUDE FUNCIONS
 	;==================
-	.include "cpctelera.h.s"
 
+	_main::
+		main_bucle:
+		call 	erase_hero
 
-	initialize:
-		ret
+		call 	checkUserInput
 
-	_main:
-		_main_bucle:
-			jr		_main_bucle
+		call 	draw_hero
+
+		call 	cpct_waitVSYNC_asm
+		jr		main_bucle
 
