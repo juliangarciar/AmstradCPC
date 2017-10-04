@@ -6,12 +6,29 @@ color: .db #0xFF
 	;==================
 	;;;PUBLIC DATA
 	;==================
+
+	;;Hero Data
 hero_x:: .db #0
 hero_y:: .db #160
 hero_x_size:: .db #0x04
 hero_y_size:: .db #0x10
+hero_jump::	  .db #-1 ; controla el estado del salto. Vale -1 cuanod no estoy saltando
+
+	;;Jump Table
+jumptable::	.db	#-3, #-2, #-1, #-1		;datos para rellenar la tabla
+			.db #-1, #00, #00, #00
+			.db	#01, #02, #02, #03
+			.db	#0x80 					;para marcar el final
+
+
 .area _CODE
+
 .include "cpctelera.h.s"
+
+
+	;==================
+	;   DIBUJA HEROE
+	;==================
 
 draw_hero::
 		ld 		de, #0xC000	;beginning of screen
@@ -29,6 +46,12 @@ draw_hero::
 		ld 		a, (color)
 		call 	cpct_drawSolidBox_asm ;draw box itself
 	ret
+
+
+	;==================
+	;   BORRAR HEROE
+	;==================	
+
 erase_hero::
 		ld 		a, #0x00
 		ld 		(color), a

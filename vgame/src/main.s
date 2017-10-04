@@ -19,6 +19,7 @@
 		main_bucle:
 		call 	erase_hero
 
+		call	jump_control
 		call 	checkUserInput
 
 		call 	draw_hero
