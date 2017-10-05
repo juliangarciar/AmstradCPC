@@ -1,0 +1,2 @@
+.globl drawObstacles
+.globl getObstaclePtr

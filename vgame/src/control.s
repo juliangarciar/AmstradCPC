@@ -16,24 +16,22 @@
 moveHeroRight:
 	ld 		a, (hero_x)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
-	jr 		z, dont_move_right  ;hero_x = limite pantalla dcha, no mover
+	ret 	z  ;hero_x = limite pantalla dcha, no mover
 
 		;MOVE RIGHT (no esta en el limite)
 		inc 	a
 		ld 		(hero_x), a
-	dont_move_right:
 	ret
 
 
 moveHeroLeft:
 	ld 		a, (hero_x)
 	cp 		#0			;limite izquierda
-	jr		z, dont_move_left	;hero_x = limite pantalla izda
+	ret 	z	;hero_x = limite pantalla izda
 
 		;MOVE LEFT (no esta en le limite)
 		dec 	a
 		ld 		(hero_x), a
-	dont_move_left:
 	ret
 
 
@@ -48,11 +46,9 @@ startJump:
 	cp      #-1		;comprobamos si el salto esta activo. Si no da 0, estara activo
 	ret     nz
 
-	;Salto inactivo, lo activamos
-	ld 		a, #0
-	ld 		(hero_jump), a
-
-
+		;Salto inactivo, lo activamos
+		ld 		a, #0
+		ld 		(hero_jump), a
 	ret
 
 

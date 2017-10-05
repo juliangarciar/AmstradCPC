@@ -15,9 +15,9 @@ hero_y_size:: .db #0x10
 hero_jump::	  .db #-1 ; controla el estado del salto. Vale -1 cuanod no estoy saltando
 
 	;;Jump Table
-jumptable::	.db	#-3, #-2, #-1, #-1		;datos para rellenar la tabla
+jumptable::	.db	#-8, #-7, #-6, #-5, #-4, #-3, #-2		;datos para rellenar la tabla
 			.db #-1, #00, #00, #00
-			.db	#01, #02, #02, #03
+			.db	#01, #02, #03, #04, #05, #06, #07, #08
 			.db	#0x80 					;para marcar el final
 
 
