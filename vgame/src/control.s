@@ -37,6 +37,12 @@ moveHeroLeft:
 	ret
 
 
+
+
+	;==================
+	;   EMPEZAR SALTO
+	;================== 
+
 startJump:
 	ld 		a, (hero_jump)
 	cp      #-1		;comprobamos si el salto esta activo. Si no da 0, estara activo
@@ -73,28 +79,33 @@ jump_control::
 	ld		b, #0			;BC = A
 	add		hl, bc 			;HL = HL+BC
 
+
+	;Comprobar si ha terminado el salto
+	ld		a, (hl)
+	cp 		#0x80 ;Jump value = 0x80
+	jr 		z, end_of_jump
+
 	;Jump movement
-	ld		a, (hl) 		;A = Jump movement
+	ld		b, a		;B = Jump movement
 	ld		a, (hero_y) 	;A = hero_y
 	add		b 				;A = A + B
 	ld		(hero_y), a     ;Actualizamos hero_y 
 
 	;Incrementamos el indice de la jumptable
 	ld		a, (hero_jump)  ;A = hero_jump
-	cp      #0x80			;comprobamos si es el ultimo valor de la jumptable
-	jr 		nz, continue_jump  ;no es el ultimo, continua
 	
-		;Terminar salto
-		ld		a, #-2
-
-	continue_jump:
 	inc     a
 	ld		(hero_jump), a  ;Hero_jump++
 
 
 	ret
 
+	;Ponemos -1 en el index cuando el salto termina
+	end_of_jump:
+		ld 		a, #-1
+		ld 		(hero_jump), a
 
+	ret
 
 	;================================
 	;   COMPROBAR TECLAS PULSADAS
