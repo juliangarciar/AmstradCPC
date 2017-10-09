@@ -16,29 +16,23 @@
 	;==================
 	;;;INCLUDE FUNCIONS
 	;==================
-	
-	_main::
-
-		main_bucle:
-		call 	erase_hero
-
-
-		;HACER UN UPDATE DE CONTROL
-		call	jump_control
-		call 	checkUserInput
-
-		call 	checkCollision
-		;cp      #1
-		;jr 		z, normal
-
-		;	ld 		hl, #0xC000
-		;	ld 		(hl), #0xFF
-
-		normal:		
+	init:
 		call 	drawObstacles
-		call 	draw_hero
+	ret
+	_main::
+		call init
+	
+			main_bucle:
+			call 	erase_hero
 
-		call 	cpct_waitVSYNC_asm
-		jr		main_bucle
-		
+
+			;HACER UN UPDATE DE CONTROL
+			call	jump_control
+			call 	checkUserInput
+			call 	draw_hero
+
+			call 	cpct_waitVSYNC_asm
+			jr		main_bucle
+
+		ret
 

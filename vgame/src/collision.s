@@ -5,6 +5,8 @@
 .include "obstacle.h.s"
 
 checkCollision::
+	call 	heroPtr
+	call 	obsPtr
 	;Evaluamos las condiciones para que no colisione
 	;en caso contrario, colisionara
 	;Comprobar el eje Y primero lado SUPERIOR, ya que es más probable que colisione
@@ -12,76 +14,65 @@ checkCollision::
 
 	;Cargamos posicion del obstaculo_y
 	;la guardamos en el almacen c
-	ld 		a, (posY_1)
+	ld 		a, 1(iy)
 	ld 		c, a
-
 	;Cargamos posicion del heroe_y
 	;la guardamos en el almacen b
-	ld 		a, (hero_y)
+	ld 		a, 1(ix)
 	ld 		b, a
-
 	;Cargamos el ancho 
-	ld 		a, (hero_y_size)
-
+	ld 		a, 3(ix)
 	;Hacemos la operacion siguiente
 	;hero_y + hero_y_size - posY_1 <= 0
 	add 	a, b
 	sub 	c
 	;Hacemos las condiciones
-	;jr 		z, no_collision
-	;jr		c, no_collision
 	jp 		m, no_collision
 
 		;Comprobamos colision por el otro lado ABAJO
 		;posY_1 + sizeY_1 - hero_y <=0
-		ld 		a, (hero_y)
+		ld 		a, 1(ix)
 		ld 		c, a
 
-		ld 		a, (posY_1)
+		ld 		a, 1(iy)
 		ld 		b, a
 
-		ld 		a, (sizeY_1)
+		ld 		a, 3(iy)
 
 		add 	a, b
 		sub 	c
 
-		;jr 		z, no_collision
-		;jr		c, no_collision
 		jp 		m, no_collision
 
 			;Si llegamos aqui, es porque colisiona en el eje Y
 			;comprobamos ahora que ocurre en el eje X
 			;lado IZQUIERDO
 			;hero_x + hero_x_size - posX_1 <= 0
-			ld 		a, (posX_1)
+			ld 		a, 0(iy)
 			ld 		c, a
 
-			ld 		a, (hero_x)
+			ld 		a, 0(ix)
 			ld 		b, a
 
-			ld 		a, (hero_x_size)
+			ld 		a, 2(ix)
 
 			add 	a, b
 			sub 	c
 
-			;jr 		z, no_collision
-			;jr		c, no_collision
 			jp 		m, no_collision
 
 				;Comprobamos lado DERECHO en el eje X
 				;posX_1 + sizeX_1 - hero_x <= 0
-				ld 		a, (hero_x)
+				ld 		a, 0(ix)
 				ld 		c, a
 
-				ld 		a, (posX_1)
+				ld 		a, 0(iy)
 				ld 		b, a
 
-				ld 		a, (sizeX_1)
+				ld 		a, 2(iy)
 				add 	a, b
 				sub 	c
 
-				;jr 		z, no_collision
-				;jr		c, no_collision
 				jp 		m, no_collision
 
 					;Sillega aqui es porque colisiona,

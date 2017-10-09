@@ -8,12 +8,7 @@ color: .db #0xFF
 	;==================
 
 	;;Hero Data
-hero_x:: .db #0
-hero_y:: .db #160
-hero_x_size:: .db #0x03
-hero_y_size:: .db #0x0F
-hero_collision:: .db #1
-hero_jump::	  .db #-1 ; controla el estado del salto. Vale -1 cuanod no estoy saltando
+hero_data:		.db #0, #160, #0x03, #0x0F, #-1
 
 	;;Jump Table
 jumptable::	.db	#-8, #-7, #-6, #-5, #-4, #-3, #-2		;datos para rellenar la tabla
@@ -32,12 +27,13 @@ jumptable::	.db	#-8, #-7, #-6, #-5, #-4, #-3, #-2		;datos para rellenar la tabla
 	;==================
 
 draw_hero::
+		call 	heroPtr
 		ld 		de, #0xC000	;beginning of screen
 
-		ld 		a, (hero_x)
+		ld 		a, 0(ix)
 		ld 		c, a 		; b = hero_X
 
-		ld 		a, (hero_y)
+		ld 		a, 1(ix)
 		ld 		b, a 		; c = hero_y
 		
 		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register
@@ -59,4 +55,7 @@ erase_hero::
 		call 	draw_hero
 		ld 		a, #0xFF
 		ld		(color), a
+	ret
+heroPtr::
+		ld 		ix, #hero_data
 	ret

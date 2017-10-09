@@ -10,118 +10,65 @@
 .include "collision.h.s"
 
 	;==================
-	;   MOVIMIENTO
+	; MOVIMIENTO HEROE
 	;==================
 no_colisiona:
 	ret
 moveHeroRight:
-	ld 		a, (hero_x)
+	call heroPtr
+	ld 		a, 0(ix)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
-	ret 	z  ;hero_x = limite pantalla dcha, no mover
+	ret 	z  			;hero_x = limite pantalla dcha, no mover
 
-		;MOVE RIGHT (no esta en el limite)
-		;call 	checkCollision
-		;ld 		a, (hero_collision)
-		;cp      #1
-		;jr 		z, normal1
 
-			;ld 		hl, #0xC000
-			;ld 		(hl), #0xFF
-
-		ld 		a, (hero_x)
-		inc 	a
-		ld 		(hero_x), a
-
+		inc 	0(ix)
 		call 	checkCollision
 		cp 		#1
 		jr 		nz, no_colisiona
 
-			ld 		a, (hero_x)
-			dec 	a
-			ld 		(hero_x), a
+			dec  	0(ix)
 	ret
 
-
 moveHeroLeft:
-	ld 		a, (hero_x)
+	call heroPtr
+	ld 		a, 0(ix)
 	cp 		#0			;limite izquierda
-	ret 	z	;hero_x = limite pantalla izda
+	ret 	z			;hero_x = limite pantalla izda
 
-		;MOVE LEFT (no esta en le limite)
-		;call 	checkCollision
-		;ld 		a, (hero_collision)
-		;cp      #1
-		;jr 		z, normal2
+		dec 	0(ix)	
+		call 	checkCollision
+		cp 		#1
+		jr 		nz, no_colisiona
 
-			;ld 		hl, #0xC000
-			;ld 		(hl), #0xFF
-
-		ld 		a, (hero_x)
-		dec 	a
-		ld 		(hero_x), a
-
-			call 	checkCollision
-			cp 		#1
-			jr 		nz, no_colisiona
-
-			ld 		a, (hero_x)
-			inc 	a
-			ld 		(hero_x), a
+			inc 	0(ix)
 	ret
 
 moveHeroUp:
-ld 		a, (hero_y)
-cp 		#0			;limite izquierda
-ret 	z		;hero_x = limite pantalla izda
+	call heroPtr
+	ld 		a, 1(ix)
+	cp 		#0			;limite izquierda
+	ret 	z		;hero_x = limite pantalla izda
 
-	;MOVE LEFT (no esta en le limite)
-	;call 	checkCollision
-	;ld 		a, (hero_collision)
-	;cp      #1
-	;jr 		z, normal3
-
-		;ld 		hl, #0xC000
-		;ld 		(hl), #0xFF
-
-	ld 		a, (hero_y)
-	dec 	a
-	ld 		(hero_y), a
-
+		dec 	1(ix)
 		call 	checkCollision
 		cp 		#1
 		jr 		nz, no_colisiona
 
-		ld 		a, (hero_y)
-		inc 	a
-		ld 		(hero_y), a
+			inc 	1(ix)
 	ret
 
 moveHeroDown:
-ld 		a, (hero_y)
-cp 		#199			;limite izquierda
-ret 	z		;hero_x = limite pantalla izda
+	call heroPtr
+	ld 		a, 1(ix)
+	cp 		#199			;limite izquierda
+	ret 	z		;hero_x = limite pantalla izda
 
-	;MOVE LEFT (no esta en le limite)
-	;call 	checkCollision
-	;ld 		a, (hero_collision)
-	;cp      #1
-	;jr 		z, normal4
-
-		;ld 		hl, #0xC000
-		;ld 		(hl), #0xFF
-
-	ld 		a, (hero_y)
-	inc 	a
-	ld 		(hero_y), a
-
+		inc 	1(ix)
 		call 	checkCollision
 		cp 		#1
 		jr 		nz, no_colisiona
 
-		ld 		a, (hero_y)
-		dec 	a
-		ld 		(hero_y), a
-
+			dec 	1(ix)
 	ret
 
 	;==================
@@ -129,13 +76,14 @@ ret 	z		;hero_x = limite pantalla izda
 	;================== 
 
 startJump:
-	ld 		a, (hero_jump)
+	ld 		a, 4(ix)
 	cp      #-1		;comprobamos si el salto esta activo. Si no da 0, estara activo
 	ret     nz
 
 		;Salto inactivo, lo activamos
-		ld 		a, #0
-		ld 		(hero_jump), a
+		;ld 		a, #0
+		;ld 		4(ix), a
+		ld 		4(ix), #0
 	ret
 
 
@@ -149,10 +97,10 @@ startJump:
 ;Habra que añadir la tecla w que compruebe cuando se pulse, active el salto.
 
 jump_control::
-
-	ld	  a, (hero_jump) ;A = hero_jump status
-	cp    #-1            ;A == -1?
-	ret   z				 ;Si A== -1, no salta
+	call 	heroPtr
+	ld	 	a, 4(ix) ;A = hero_jump status
+	cp    	#-1            ;A == -1?
+	ret   	z				 ;Si A== -1, no salta
 
 	;Si A!=0
 	;MOVE HEROE
@@ -170,23 +118,24 @@ jump_control::
 
 	;Jump movement
 	ld		b, a		;B = Jump movement
-	ld		a, (hero_y) 	;A = hero_y
+	ld		a, 1(ix)	;A = hero_y
 	add		b 				;A = A + B
-	ld		(hero_y), a     ;Actualizamos hero_y 
+	ld		1(ix), a     ;Actualizamos hero_y 
 
 	;Incrementamos el indice de la jumptable
-	ld		a, (hero_jump)  ;A = hero_jump
+	;ld		a, 4(ix)  ;A = hero_jump
 	
-	inc     a
-	ld		(hero_jump), a  ;Hero_jump++
-
+	;inc     a
+	;ld		4(ix), a  ;Hero_jump++
+	inc 	4(ix)
 
 	ret
 
 	;Ponemos -1 en el index cuando el salto termina
 	end_of_jump:
-		ld 		a, #-1
-		ld 		(hero_jump), a
+		ld 		4(ix), #-1
+		;ld 		a, #-1
+		;ld 		(hero_jump), a
 
 	ret
 
@@ -195,7 +144,6 @@ jump_control::
 	;================================
 
 checkUserInput::
-	
 	;TECLA D
 
 	;Move right
