@@ -10,8 +10,9 @@ color: .db #0xFF
 	;;Hero Data
 hero_x:: .db #0
 hero_y:: .db #160
-hero_x_size:: .db #0x04
-hero_y_size:: .db #0x10
+hero_x_size:: .db #0x03
+hero_y_size:: .db #0x0F
+hero_collision:: .db #1
 hero_jump::	  .db #-1 ; controla el estado del salto. Vale -1 cuanod no estoy saltando
 
 	;;Jump Table

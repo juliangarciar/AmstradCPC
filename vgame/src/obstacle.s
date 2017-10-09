@@ -1,8 +1,8 @@
 .area _DATA
-posX_1: .db #16
-posY_1: .db #152
-sizeX_1: .db #0x04
-sizeY_1: .db #0x10
+posX_1:: .db #12
+posY_1:: .db #160
+sizeX_1:: .db #0x03
+sizeY_1:: .db #0x0F
 
 posX_2: .db #50
 posY_2: .db #152

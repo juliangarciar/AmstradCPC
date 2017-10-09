@@ -6,3 +6,4 @@
 .globl hero_y_size
 .globl hero_jump
 .globl jumptable
+.globl hero_collision

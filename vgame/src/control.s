@@ -7,20 +7,38 @@
 .include "cpctelera.h.s"
 .include "hero.h.s"
 .include "keyboard/keyboard.s"
-
+.include "collision.h.s"
 
 	;==================
 	;   MOVIMIENTO
 	;==================
-
+no_colisiona:
+	ret
 moveHeroRight:
 	ld 		a, (hero_x)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
 	ret 	z  ;hero_x = limite pantalla dcha, no mover
 
 		;MOVE RIGHT (no esta en el limite)
+		;call 	checkCollision
+		;ld 		a, (hero_collision)
+		;cp      #1
+		;jr 		z, normal1
+
+			;ld 		hl, #0xC000
+			;ld 		(hl), #0xFF
+
+		ld 		a, (hero_x)
 		inc 	a
 		ld 		(hero_x), a
+
+		call 	checkCollision
+		cp 		#1
+		jr 		nz, no_colisiona
+
+			ld 		a, (hero_x)
+			dec 	a
+			ld 		(hero_x), a
 	ret
 
 
@@ -30,12 +48,81 @@ moveHeroLeft:
 	ret 	z	;hero_x = limite pantalla izda
 
 		;MOVE LEFT (no esta en le limite)
+		;call 	checkCollision
+		;ld 		a, (hero_collision)
+		;cp      #1
+		;jr 		z, normal2
+
+			;ld 		hl, #0xC000
+			;ld 		(hl), #0xFF
+
+		ld 		a, (hero_x)
 		dec 	a
 		ld 		(hero_x), a
+
+			call 	checkCollision
+			cp 		#1
+			jr 		nz, no_colisiona
+
+			ld 		a, (hero_x)
+			inc 	a
+			ld 		(hero_x), a
 	ret
 
+moveHeroUp:
+ld 		a, (hero_y)
+cp 		#0			;limite izquierda
+ret 	z		;hero_x = limite pantalla izda
 
+	;MOVE LEFT (no esta en le limite)
+	;call 	checkCollision
+	;ld 		a, (hero_collision)
+	;cp      #1
+	;jr 		z, normal3
 
+		;ld 		hl, #0xC000
+		;ld 		(hl), #0xFF
+
+	ld 		a, (hero_y)
+	dec 	a
+	ld 		(hero_y), a
+
+		call 	checkCollision
+		cp 		#1
+		jr 		nz, no_colisiona
+
+		ld 		a, (hero_y)
+		inc 	a
+		ld 		(hero_y), a
+	ret
+
+moveHeroDown:
+ld 		a, (hero_y)
+cp 		#199			;limite izquierda
+ret 	z		;hero_x = limite pantalla izda
+
+	;MOVE LEFT (no esta en le limite)
+	;call 	checkCollision
+	;ld 		a, (hero_collision)
+	;cp      #1
+	;jr 		z, normal4
+
+		;ld 		hl, #0xC000
+		;ld 		(hl), #0xFF
+
+	ld 		a, (hero_y)
+	inc 	a
+	ld 		(hero_y), a
+
+		call 	checkCollision
+		cp 		#1
+		jr 		nz, no_colisiona
+
+		ld 		a, (hero_y)
+		dec 	a
+		ld 		(hero_y), a
+
+	ret
 
 	;==================
 	;   EMPEZAR SALTO
@@ -136,9 +223,9 @@ checkUserInput::
 
 	leftNotPressed:
 
-	;;TECLA W
+	;;TECLA SPACE
 
-	ld 		hl, #Key_W
+	ld 		hl, #Key_Space
 	call 	cpct_isKeyPressed_asm
 	cp 		#0
 	jr 		z, jumpNotPressed
@@ -147,5 +234,27 @@ checkUserInput::
 			call startJump
 
 	jumpNotPressed:
+
+
+	;TECLA W
+	ld 		hl, #Key_W
+	call 	cpct_isKeyPressed_asm
+	cp 		#0
+	jr 		z, upNotPressed
+
+			;ELSE MOVE LEFT 
+			call moveHeroUp
+
+	upNotPressed:
+	;TECLA W
+	ld 		hl, #Key_S
+	call 	cpct_isKeyPressed_asm
+	cp 		#0
+	jr 		z, nothingPressed
+
+			;ELSE MOVE LEFT 
+			call moveHeroDown
+
+	nothingPressed:
 
 	ret
