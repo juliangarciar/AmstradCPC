@@ -1,15 +1,14 @@
 .area _DATA
+.include "shortcuts.h.s"
 	;==================
 	;;;PRIVATE DATA
 	;==================
 color: .db #0xFF
-.equ	hero_x, 0
-.equ	hero_y, 1
-.equ	hero_w, 2
-.equ	hero_h, 3
-.equ	hero_j, 4
-
-
+;.equ	hero_x, 0
+;.equ	hero_y, 1
+;.equ	hero_w, 2
+;.equ	hero_h, 3
+;.equ	hero_j, 4
 	;;Hero Data
 hero_data:		
 	heroX: 	.db #0 
@@ -40,7 +39,6 @@ draw_hero::
 		ld 		de, #0xC000	;beginning of screen
 
 		ld 		c, hero_x(ix) 		; b = hero_X
-
 		ld 		b, hero_y(ix) 		; c = hero_y
 		
 		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register

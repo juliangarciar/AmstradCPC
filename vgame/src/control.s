@@ -2,6 +2,7 @@
 	;==================
 	;;;PRIVATE DATA
 	;==================
+.include "shortcuts.h.s"
 
 .area _CODE
 .include "cpctelera.h.s"
@@ -15,8 +16,8 @@
 no_colisiona:
 	ret
 moveHeroRight:
-	call heroPtr
-	ld 		a, 0(ix)
+	call 	heroPtr
+	ld 		a, 0(ix)	; ld a, (heroX)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
 	ret 	z  			;hero_x = limite pantalla dcha, no mover
 
@@ -60,7 +61,7 @@ moveHeroUp:
 moveHeroDown:
 	call heroPtr
 	ld 		a, 1(ix)
-	cp 		#199			;limite izquierda
+	cp 		#184			;limite izquierda
 	ret 	z		;hero_x = limite pantalla izda
 
 		inc 	1(ix)
@@ -136,7 +137,6 @@ jump_control::
 	ret
 
 	forzar_parada:
-
 		jr 		end_of_jump
 	;Ponemos -1 en el index cuando el salto termina
 	end_of_jump:

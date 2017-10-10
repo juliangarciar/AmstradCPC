@@ -1,4 +1,5 @@
 .area _DATA
+.include "shortcuts.h.s"
 	;==================
 	; OBS DATA
 	;==================

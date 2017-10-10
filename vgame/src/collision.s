@@ -1,9 +1,9 @@
 .area _DATA
+.include "shortcuts.h.s"
 .area _CODE
 .include "cpctelera.h.s"
 .include "hero.h.s"
 .include "obstacle.h.s"
-
 checkCollision::
 	collisionBucle:
 	call 	heroPtr
@@ -15,14 +15,14 @@ checkCollision::
 
 	;Cargamos posicion del obstaculo_y
 	;la guardamos en el almacen c
-	ld 		a, 1(iy)
+	ld 		a, obs_y(iy)
 	ld 		c, a
 	;Cargamos posicion del heroe_y
 	;la guardamos en el almacen b
-	ld 		a, 1(ix)
+	ld 		a, hero_y(ix)
 	ld 		b, a
 	;Cargamos el ancho 
-	ld 		a, 3(ix)
+	ld 		a, hero_h(ix)
 	;Hacemos la operacion siguiente
 	;hero_y + hero_y_size - posY_1 <= 0
 	add 	a, b
@@ -32,13 +32,13 @@ checkCollision::
 
 		;Comprobamos colision por el otro lado ABAJO
 		;posY_1 + sizeY_1 - hero_y <=0
-		ld 		a, 1(ix)
+		ld 		a, hero_y(ix)
 		ld 		c, a
 
-		ld 		a, 1(iy)
+		ld 		a, obs_y(iy)
 		ld 		b, a
 
-		ld 		a, 3(iy)
+		ld 		a, obs_h(iy)
 
 		add 	a, b
 		sub 	c
@@ -49,13 +49,13 @@ checkCollision::
 			;comprobamos ahora que ocurre en el eje X
 			;lado IZQUIERDO
 			;hero_x + hero_x_size - posX_1 <= 0
-			ld 		a, 0(iy)
+			ld 		a, obs_x(iy)
 			ld 		c, a
 
-			ld 		a, 0(ix)
+			ld 		a, hero_x(ix)
 			ld 		b, a
 
-			ld 		a, 2(ix)
+			ld 		a, hero_w(ix)
 
 			add 	a, b
 			sub 	c
@@ -64,13 +64,13 @@ checkCollision::
 
 				;Comprobamos lado DERECHO en el eje X
 				;posX_1 + sizeX_1 - hero_x <= 0
-				ld 		a, 0(ix)
+				ld 		a, hero_x(ix)
 				ld 		c, a
 
-				ld 		a, 0(iy)
+				ld 		a, obs_x(iy)
 				ld 		b, a
 
-				ld 		a, 2(iy)
+				ld 		a, obs_w(iy)
 				add 	a, b
 				sub 	c
 
