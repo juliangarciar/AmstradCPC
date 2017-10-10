@@ -5,6 +5,7 @@
 .include "obstacle.h.s"
 
 checkCollision::
+	collisionBucle:
 	call 	heroPtr
 	call 	obsPtr
 	;Evaluamos las condiciones para que no colisione
@@ -85,9 +86,33 @@ checkCollision::
 
 
 	no_collision:
-		ld 		a, #0
+		
 		ld 		hl, #0xC050
 		ld 		(hl), #0xFF
+
+		;DE AQUI PARA ABAJO ES UN POCO LOCURA PERO ES NECESARIO DE MOMENTO
+		ld 		a, (obs_n)
+		cp 		#1
+
+		jr 		nz, redo2
+		;TERMINA EL BUCLE Y REASIGNA EL VALOR DE N_OBS Y EL PUNTERO
+			ld 		a, #3
+			ld 		(obs_n), a
+			ld 		a, #0
+			ld 		(actual_ptr), a 
+
+		;VALOR NECESARIO PARA SABER SI HA COLISIONADO
+		ld 		a, #0
+	ret
+
+	;REASIGNA EL PUNTERO
+	redo2:
+		ld 		a, (obs_n)
+		dec 	a
+		ld 		(obs_n), a
+
+		call 	obsPtrNext
+		jr		collisionBucle
 
 	end:
 	ret

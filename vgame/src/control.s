@@ -96,6 +96,7 @@ startJump:
 ;lo desactiva y lo vuelve a poner a -1
 ;Habra que añadir la tecla w que compruebe cuando se pulse, active el salto.
 
+;HAY QUE BORRAR TODO EL SALTO
 jump_control::
 	call 	heroPtr
 	ld	 	a, 4(ix) ;A = hero_jump status
@@ -122,6 +123,9 @@ jump_control::
 	add		b 				;A = A + B
 	ld		1(ix), a     ;Actualizamos hero_y 
 
+			call	checkCollision
+			cp 		#1
+			jr 		z, forzar_parada
 	;Incrementamos el indice de la jumptable
 	;ld		a, 4(ix)  ;A = hero_jump
 	
@@ -131,6 +135,9 @@ jump_control::
 
 	ret
 
+	forzar_parada:
+
+		jr 		end_of_jump
 	;Ponemos -1 en el index cuando el salto termina
 	end_of_jump:
 		ld 		4(ix), #-1
