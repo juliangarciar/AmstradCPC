@@ -29,7 +29,7 @@
 			;HACER UN UPDATE DE CONTROL
 			call	jump_control
 			call 	checkUserInput
-			call 	gravityHero
+			call 	updateHero
 			call 	draw_hero
 
 			call 	cpct_waitVSYNC_asm

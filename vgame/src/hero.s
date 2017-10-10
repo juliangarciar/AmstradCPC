@@ -70,6 +70,6 @@ heroPtr::
 	;==================
 	;   GRAVEDAD
 	;==================	
-gravityHero::
+updateHero::
 
 	ret

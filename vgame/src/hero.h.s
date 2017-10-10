@@ -2,4 +2,4 @@
 .globl erase_hero
 .globl jumptable
 .globl heroPtr
-.globl gravityHero
+.globl updateHero
