@@ -8,3 +8,21 @@
 .equ	obs_y, 1
 .equ	obs_w, 2
 .equ	obs_h, 3
+
+.macro defineHero name, x, y, w, h 
+	name'_data:
+		name'X: 	.db x
+		name'Y: 	.db y
+		name'W: 	.db w
+		name'H: 	.db h
+		name'J:		.db #-1
+.endm
+
+.macro defineObs name, x, y, w, h 
+	name'_data:
+		name'X: 	.db x
+		name'Y: 	.db y
+		name'W: 	.db w
+		name'H: 	.db h
+.endm
+

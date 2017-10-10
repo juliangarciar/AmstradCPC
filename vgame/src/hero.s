@@ -10,19 +10,20 @@ color: .db #0xFF
 ;.equ	hero_h, 3
 ;.equ	hero_j, 4
 	;;Hero Data
-hero_data:		
-	heroX: 	.db #0 
-	heroY: 	.db #160
-	heroW: 	.db #0x03
-	heroH: 	.db #0x0F
-	heroJ: 	.db #-1
+defineHero hero, 0, 160, 4, 15
+;hero_data:		
+;	heroX: 	.db #0 
+;	heroY: 	.db #160
+;	heroW: 	.db #0x03
+;	heroH: 	.db #0x0F
+;	heroJ: 	.db #-1
 	;==================
 	;;;PUBLIC DATA
 	;==================
 	;;Jump Table
 jumptable::	.db	#-8, #-7, #-6, #-5, #-4, #-3, #-2		;datos para rellenar la tabla
 			.db #-1, #00, #00, #00
-			.db	#01, #02, #03, #04, #05, #06, #07, #08
+			;.db	#01, #02, #03, #04, #05, #06, #07, #08
 			.db	#0x80 					;para marcar el final
 
 .area _CODE
@@ -64,4 +65,11 @@ erase_hero::
 	ret
 heroPtr::
 		ld 		ix, #hero_data
+	ret
+
+	;==================
+	;   GRAVEDAD
+	;==================	
+gravityHero::
+
 	ret
