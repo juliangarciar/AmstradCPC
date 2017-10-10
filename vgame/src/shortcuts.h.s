@@ -18,11 +18,12 @@
 		name'J:		.db #-1
 .endm
 
-.macro defineObs name, x, y, w, h 
+.macro defineObs name, x, y, w, h, l
 	name'_data:
 		name'X: 	.db x
 		name'Y: 	.db y
 		name'W: 	.db w
 		name'H: 	.db h
+		name'L:		.db l
 .endm
 

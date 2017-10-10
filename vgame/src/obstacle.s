@@ -3,26 +3,9 @@
 	;==================
 	; OBS DATA
 	;==================
-defineObs	obj1, 12, 160, 3, 15
-defineObs	obj2, 50, 152, 3, 15
-defineObs	obj3, 33, 140, 3, 15
-;obj1_data: 		
-;	obj1_x: 	.db #12
-;	obj1_y: 	.db #160
-;	obj1_w: 	.db #3
-;	obj1_h: 	.db #15
-
-;obj2_data:		
-;	obj2_x: 	.db #50
-;	obj2_y: 	.db #152
-;	obj2_w: 	.db #3
-;	obj2_h: 	.db #15
-
-;obj3_data: 		
-;	obj3_x: 	.db #33
-;	obj3_y: 	.db #140
-;	obj3_w: 	.db #3
-;	obj3_h: 	.db #15
+defineObs	obj1, 12, 160, 3, 15, 1
+defineObs	obj2, 50, 152, 3, 15, 1
+defineObs	obj3, 33, 140, 3, 15, 0
 
 obs_n:: 		.db #0x03
 actual_ptr::	.db #0x00

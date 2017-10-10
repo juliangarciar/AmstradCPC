@@ -15,13 +15,9 @@ checkCollision::
 
 	;Cargamos posicion del obstaculo_y
 	;la guardamos en el almacen c
-	;ld 		a, obs_y(iy)
-	;ld 		c, a
 	ld 		c, obs_y(iy)
 	;Cargamos posicion del heroe_y
 	;la guardamos en el almacen b
-	;ld 		a, hero_y(ix)
-	;ld 		b, a
 	ld 		b, hero_y(ix)
 	;Cargamos el ancho 
 	ld 		a, hero_h(ix)
@@ -34,14 +30,9 @@ checkCollision::
 
 		;Comprobamos colision por el otro lado ABAJO
 		;posY_1 + sizeY_1 - hero_y <=0
-		;ld 		a, hero_y(ix)
-		;ld 		c, a
 		ld 		c, hero_y(ix)
-		;ld 		a, obs_y(iy)
-		;ld 		b, a
 		ld 		b, obs_y(iy)
 		ld 		a, obs_h(iy)
-
 		add 	a, b
 		sub 	c
 
@@ -51,14 +42,9 @@ checkCollision::
 			;comprobamos ahora que ocurre en el eje X
 			;lado IZQUIERDO
 			;hero_x + hero_x_size - posX_1 <= 0
-			;ld 		a, obs_x(iy)
-			;ld 		c, a
 			ld 		c, obs_x(iy)
-			;ld 		a, hero_x(ix)
-			;ld 		b, a
 			ld 		b, hero_x(ix)
 			ld 		a, hero_w(ix)
-
 			add 	a, b
 			sub 	c
 
@@ -66,11 +52,7 @@ checkCollision::
 
 				;Comprobamos lado DERECHO en el eje X
 				;posX_1 + sizeX_1 - hero_x <= 0
-				;ld 		a, hero_x(ix)
-				;ld 		c, a
 				ld 		c, hero_x(ix)
-				;ld 		a, obs_x(iy)
-				;ld 		b, a
 				ld 		b, obs_x(iy)
 				ld 		a, obs_w(iy)
 				add 	a, b

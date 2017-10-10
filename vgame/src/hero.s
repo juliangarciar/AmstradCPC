@@ -10,7 +10,7 @@ color: .db #0xFF
 ;.equ	hero_h, 3
 ;.equ	hero_j, 4
 	;;Hero Data
-defineHero hero, 0, 160, 4, 15
+defineHero hero, 0, 160, 3, 15
 ;hero_data:		
 ;	heroX: 	.db #0 
 ;	heroY: 	.db #160
