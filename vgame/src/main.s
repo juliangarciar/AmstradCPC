@@ -12,6 +12,7 @@
 .include "control.h.s"
 .include "obstacle.h.s"
 .include "hero.h.s"
+.include "shot.h.s"
 .include "collision.h.s"
 .globl 	_sprite_palette
 ;.globl  _g_tileset
@@ -50,8 +51,9 @@
 
 			;HACER UN UPDATE DE CONTROL
 			call	jump_control
+			call    shot_update
 			call 	checkUserInput
-			call 	drawObstacles	
+			call 	drawObstacles
 			;DOBLE EFECTO DOBLE DIVERSION
 			call 	updateHero
 			call 	updateHero
