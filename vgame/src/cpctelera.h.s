@@ -21,3 +21,7 @@
 .globl cpct_scanKeyboard_asm
 ;checks if a given key in HL is pressed
 .globl cpct_isKeyPressed_asm
+.globl cpct_drawSprite_asm
+.globl cpct_setPalette_asm
+.globl cpct_etm_setTileset2x4_asm
+.globl cpct_etm_drawTileBox2x4_asm
