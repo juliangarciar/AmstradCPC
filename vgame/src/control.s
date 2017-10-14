@@ -115,6 +115,68 @@ moveHeroLeft:
 		;	dec 	1(ix)
 ;	ret
 
+
+
+;====================
+	; MOVIMIENTO ENEMIGO
+	;====================
+
+salir:
+	ret
+
+
+moveEnemy::
+
+	;comprobamos si el enemigo esta activado o no
+	ld 		a, enemy_a(ix)
+	cp 		#0
+	jr 		z, salir
+	;ret 	nz
+
+	;call 	enemyPtr		;carga el puntero de enemigo
+	ld 		a, enemy_d(ix)		;carga enemy_d
+	cp 		#1				;compara con 1
+	jr 		z, moveRight 	;enemy_d = 0??? Si es 0, se mueve a la derecha, si no, a la izda
+
+
+		;Se mueve a la izda
+
+		ld 		a, enemy_x(ix)		;a = enemy_x
+		cp 		#0 				;para comprobar colisiones con limite izdo
+		jr 		z, chocaLeft	;enemy_x = limite pantalla izda, no mover
+
+			; Si no choca, entonces movemos
+			dec  	a
+			ld 		enemy_x(ix), a
+			ret 
+		
+		;Si choca, acutalizamos enemy_d para que cambie de sentido a la derecha
+		chocaLeft:
+		ld 		a, #1
+		ld 		enemy_d(ix), a
+		
+		ret
+
+	;Se mueve a la derecha
+	moveRight:
+
+		ld 		a, enemy_x(ix)		;a = enemy_x
+		cp 		#80-4 			;para comprobar colisiones con limite dcho
+		jr 		z, chocaRight 	;enemy_x = limite pantalla dcha, no mover
+
+			; Si no choca, entonces movemos
+			inc  	a
+			ld 		enemy_x(ix), a
+			ret 
+		
+		;Si choca, acutalizamos enemy_d para que cambie de sentido a la izquierda
+		chocaRight:
+		ld 		a, #0
+		ld 		enemy_d(ix), a
+
+	ret
+
+
 	;==================
 	;   EMPEZAR SALTO
 	;================== 

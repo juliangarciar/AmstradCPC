@@ -52,6 +52,38 @@
 	.equ	obs_h, 3
 	.equ 	obs_l, 4
 ;==========================================
+; 	ENEMY CREATION
+;
+;	VARIABLES:
+;		x -> OX
+;		y -> OY
+;		w -> WIDTH
+;		h -> HEIGHT
+;		d -> DEFINE IF IT'S THE LAST ONE 
+;		c -> DEFINE ITS COLOUR
+;		a -> DEFINE IF IT'S ACTIVE
+; 			== 1 -> NO
+;			== 0 -> YES
+; 	*name -> define a name for this entity
+;===========================================
+.macro defineEnemy name, x, y, w, h, d, c, a
+	name'_data:
+		name'X: 	.db x
+		name'Y: 	.db y
+		name'W: 	.db w
+		name'H: 	.db h
+		name'D: 	.db d
+		name'C:		.db c
+		name'A:		.db a
+.endm
+	.equ	enemy_x, 0
+	.equ	enemy_y, 1
+	.equ	enemy_w, 2
+	.equ	enemy_h, 3
+	.equ	enemy_d, 4
+	.equ	enemy_c, 5
+	.equ	enemy_a, 6
+;==========================================
 ; 	SPRITE HERO
 ;
 ;	VARIABLES:

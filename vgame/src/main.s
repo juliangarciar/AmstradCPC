@@ -14,6 +14,7 @@
 .include "hero.h.s"
 .include "shot.h.s"
 .include "collision.h.s"
+.include "enemy.h.s"
 .globl 	_sprite_palette
 ;.globl  _g_tileset
 ;.globl 	_level1
@@ -48,6 +49,36 @@
 	
 			main_bucle:
 			call 	erase_hero
+			;Enemy1
+			call	enemy1Ptr
+			call 	erase_enemy
+			;Enemy2
+			call	enemy2Ptr
+			call 	erase_enemy	
+			;Enemy3
+			call	enemy3Ptr
+			call 	erase_enemy
+
+			; call	enemy4Ptr
+			; call 	erase_enemy
+
+			; call	enemy5Ptr
+			; call 	erase_enemy
+
+			; call	enemy6Ptr
+			; call 	erase_enemy
+
+			; call	enemy7Ptr
+			; call 	erase_enemy
+
+			; call	enemy8Ptr
+			; call 	erase_enemy
+
+			; call	enemy9Ptr
+			; call 	erase_enemy
+
+			; call	enemy10Ptr
+			; call 	erase_enemy
 
 			;HACER UN UPDATE DE CONTROL
 			call	jump_control
@@ -58,6 +89,39 @@
 			call 	updateHero
 			call 	updateHero
 			call 	draw_hero
+
+			call 	activateEnemy	;comprobamos si el enemigo esta activo o no
+			call	updateEnemy
+			;Dibujamos todos los enemigos
+			call 	enemy1Ptr
+			call	draw_enemy
+
+			call 	enemy2Ptr
+			call	draw_enemy
+
+			call 	enemy3Ptr
+			call	draw_enemy
+
+			; call 	enemy4Ptr
+			; call	draw_enemy
+
+			; call 	enemy5Ptr
+			; call	draw_enemy
+			
+			; call 	enemy6Ptr
+			; call	draw_enemy
+
+			; call 	enemy7Ptr
+			; call	draw_enemy
+			
+			; call 	enemy8Ptr
+			; call	draw_enemy
+
+			; call 	enemy9Ptr
+			; call	draw_enemy
+			
+			; call 	enemy10Ptr
+			; call	draw_enemy
 
 			call 	cpct_waitVSYNC_asm
 			jr		main_bucle
