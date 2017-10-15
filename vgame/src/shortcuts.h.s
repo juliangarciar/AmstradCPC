@@ -62,11 +62,17 @@
 ;		d -> DEFINE IF IT'S THE LAST ONE 
 ;		c -> DEFINE ITS COLOUR
 ;		a -> DEFINE IF IT'S ACTIVE
+; 			== 1 -> YES
+;			== 0 -> NO
+;		t -> TIPE
+;			== 0 -> TERRESTRE
+;			== 1 -> VOLADOR
+;		l -> DEFINE IF IT'S THE LAST ONE
 ; 			== 1 -> NO
 ;			== 0 -> YES
 ; 	*name -> define a name for this entity
 ;===========================================
-.macro defineEnemy name, x, y, w, h, d, c, a
+.macro defineEnemy name, x, y, w, h, d, c, a, t, l
 	name'_data:
 		name'X: 	.db x
 		name'Y: 	.db y
@@ -75,6 +81,8 @@
 		name'D: 	.db d
 		name'C:		.db c
 		name'A:		.db a
+		name'T: 	.db t
+		name'L:		.db l
 .endm
 	.equ	enemy_x, 0
 	.equ	enemy_y, 1
@@ -83,6 +91,8 @@
 	.equ	enemy_d, 4
 	.equ	enemy_c, 5
 	.equ	enemy_a, 6
+	.equ 	enemy_t, 7
+	.equ 	enemy_l, 8
 ;==========================================
 ; 	SPRITE HERO
 ;
