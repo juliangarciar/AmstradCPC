@@ -103,6 +103,9 @@ erase_hero::
 heroPtr::
 		ld 		ix, #hero_data
 	ret
+heroPtrY::
+		ld 		iy, #hero_data
+	ret
 spritePtr::
 		ld 		iy, #char_data
 	ret

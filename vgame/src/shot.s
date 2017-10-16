@@ -5,7 +5,7 @@
 .include "shot.h.s"
 .include "hero.h.s"
 
-defineBale bale, 0, 0, 0, 0  
+defineBale bale, 0, 0, 0, 2  
 ;defineBale bale
 
 ; ======= Variables bala ============
@@ -17,30 +17,33 @@ defineBale bale, 0, 0, 0, 0
 ;dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
 
 check_shot:
-	call heroPtr
-	ld 	b, hero_x(ix)
-	;ld 	b, a
-	ld 	c, hero_y(ix)
-	;ld  c, a
 	call balePtr
-	ld 	bale_x(ix), b
-	ld 	bale_y(ix), c
+	
 	;; Recogemos y guardamos el valor de a en b, que en este caso es
 	;; la direcion de la bala (dir_bale)
-	ld   b, a
+	;ld   b, a
 	;;cp   #0
 	;;jr   z, not_check
 	ld   a, bale_a(ix) 
 	cp   #1
 	jr   z,  not_check
- 
+ 		
+ 		;;CARGAMOS POSCIONES DEL HEROE EN LA BALA
+ 		call heroPtrY
+		;ld 	b, hero_x(iy)
+		;ld 	c, hero_y(iy)
+
+		;ld 	bale_x(ix), hero_x(iy)
+		;ld 	bale_y(ix), hero_y(iy)
+		ld 	a, hero_dir(iy)
+		ld  bale_bd(ix), a
 		;; Si no hay bala, activamos la bala y asignamos la posicion
 		;; del heroe a la posicion de la bala
 		;;ld   a, #1
 		;;ld   (alive), a
 
-		ld   a, b
-		ld   bale_bd(ix), a ;; Actualizamos la direccion de la bala segun lo almacenado en b
+		;ld   bale_bd(ix), a ;; Actualizamos la direccion de la bala segun lo almacenado en b
+		ld 	  a, bale_bd(ix)
 		dec   a ;; dec a
 		;;cp   #1
 		jp   z, correcionIzq
@@ -50,17 +53,16 @@ check_shot:
 
 		;; Cambiamos la direccion de la bala a derecha para que empiece
 		;; a disparar hacia esa direccion.
-		ld   a, #2
-		ld   bale_bd(ix), a 
+
 		;;jr   not_check   
 			
 			;; Funciones que son correciones para que las posiciones de
 			;; de la bala empecen en la posicion que corresponde
 			correcionIzq:
-				ld   a, hero_x(ix)
+				ld   a, hero_x(iy)
 				dec  a
 				ld   bale_x(ix), a
-				ld   a, hero_y(ix)
+				ld   a, hero_y(iy)
 				ld   bale_y(ix), a
 
 				;; (Bala activa) Actualizamos la vida de la bala 
@@ -70,10 +72,10 @@ check_shot:
 				ret
 
 			correccionDcha:
-				ld   a, hero_x(ix)
+				ld   a, hero_x(iy)
 				add  a, #2
 				ld   bale_x(ix), a
-				ld   a, hero_y(ix)
+				ld   a, hero_y(iy)
 				ld   bale_y(ix), a
 				;;ld   a, (hero_y)
 
@@ -138,6 +140,9 @@ move_dir: ;; Cambiar esta parte poniendo cp y comprobando que nuero es para ir a
 		cp   #2
 		jp   z, right
 
+		cp   #3
+		jp   z, top
+
 	;;ld   a, #0
 	;;ld   (dir_bale), a
 
@@ -148,6 +153,11 @@ move_dir: ;; Cambiar esta parte poniendo cp y comprobando que nuero es para ir a
 
 		right:
 			inc bale_x(ix)
+
+		ret
+
+		top:
+			dec bale_y(ix)
 
 		ret
 
@@ -175,19 +185,22 @@ erase_bale:
 
 draw_bale:
 	call balePtr
+	ld   a, bale_a(ix)
+	cp   #0
+	jr   z, not_draw
 
-	ld 		de, #0xC000
-	ld 		a, bale_x(ix)
-	ld 		c, a
-	ld 		a, bale_y(ix)
-	ld 		b, a
-	call 	cpct_getScreenPtr_asm
+		ld 		de, #0xC000
+		ld 		a, bale_x(ix)
+		ld 		c, a
+		ld 		a, bale_y(ix)
+		ld 		b, a
+		call 	cpct_getScreenPtr_asm
 
-	ex		de, hl
-	ld      a, #0xF0  ;; color
-	ld		bc, #0x0201
-	call 	cpct_drawSolidBox_asm
-
+		ex		de, hl
+		ld      a, #0xF0  ;; color
+		ld		bc, #0x0201
+		call 	cpct_drawSolidBox_asm
+	not_draw:
 	ret
 
 
@@ -201,6 +214,10 @@ checkBorders:
 	jp 		z, outside
 
 	ld		a, bale_x(ix)
+	cp 		#0
+	jp		z, outside
+	
+	ld		a, bale_y(ix)
 	cp 		#0
 	jp		z, outside
 	
@@ -229,4 +246,4 @@ outside:
 balePtr::
 		ld   ix, #bale_data
 	ret
-	
+

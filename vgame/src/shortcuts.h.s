@@ -17,6 +17,7 @@
 		name'J:		.db #-1
 		name'SY: 	.db sy 
 		name'SH: 	.db #1
+		name'D: 	.db #2
 .endm
 	.equ	hero_x, 0
 	.equ	hero_y, 1
@@ -25,6 +26,7 @@
 	.equ	hero_j, 4
 	.equ 	hero_special_y, 5
 	.equ 	hero_special_h, 6
+	.equ 	hero_dir, 7
 ;==========================================
 ; 	SHOT CREATION
 ;

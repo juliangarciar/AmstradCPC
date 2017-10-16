@@ -4,3 +4,4 @@
 .globl heroPtr
 .globl spritePtr
 .globl updateHero
+.globl heroPtrY
