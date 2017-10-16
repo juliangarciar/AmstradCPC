@@ -1,13 +1,12 @@
 .area _DATA
 .include "shortcuts.h.s"
-.include "control.h.s"
 	;==================
 	;;;PRIVATE DATA
 	;==================
 ;color: .db #0x00
 time:		.db #200	;controla el tiempo de regeneracion de enemigos
 velocidadT:	.db #5
-velocidadV:	.db #1
+velocidadV:	.db #5
 ;.equ	enemy_x, 0
 ;.equ	enemy_y, 1
 ;.equ	enemy_w, 2
@@ -17,7 +16,7 @@ velocidadV:	.db #1
 
 	;;ENEMIGOS TERRESTRES
 defineEnemy enemy1, 0, 160, 3, 15, 0, #0xFF, 0, 0, 0
-;defineEnemy enemy2, 76, 160, 3, 15, 1, #0xF0, 0
+defineEnemy enemy2, 76, 160, 3, 15, 1, #0xF0, 0, 0, 0
 ; defineEnemy enemy3, 0, 160, 3, 15, 1, #0xFF, 0
 ; defineEnemy enemy4, 15, 160, 3, 15, 1, #0x0F, 0
 ; defineEnemy enemy5, 20, 160, 3, 15, 1, #0xF0, 0
@@ -30,7 +29,7 @@ defineEnemy enemy1, 0, 160, 3, 15, 0, #0xFF, 0, 0, 0
 
 	;ENEMIGOS VOLADORES
 defineEnemy enemyV1, 0, 80, 3, 15, 0, #0x0F, 0, 1, 0
-defineEnemy enemyV2, 76, 80, 3, 15, 1, #0xF0, 0, 1, 0
+defineEnemy enemyV2, 76, 80, 3, 15, 1, #0xF0, 0, 1, 1
 
 
 ;enemy_data:		
@@ -45,21 +44,21 @@ defineEnemy enemyV2, 76, 80, 3, 15, 1, #0xF0, 0, 1, 0
 .include "cpctelera.h.s"
 
 
-	;==================
-	;   DIBUJA enemyE
-	;==================
-
-stop:
-	ret
-
+;====================
+;   DIBUJA ENEMIGOS
+;====================
 draw_enemy::
+
+	call enemyPtr
 	
+	repetimos_draw:
 	;comprobamos si el enemigo esta activado o no
 		ld 		a, enemy_a(ix)
 		cp 		#0
-		jr 		z, stop
-		;ret 	nz
+		jr 		nz, dibujar
+		 	jr siguiente_draw
 
+		dibujar:
 		ld 		de, #0xC000	;beginning of screen
 
 		ld 		c, enemy_x(ix) 		; b = enemy_X
@@ -72,25 +71,35 @@ draw_enemy::
 		ld 		bc, #0x1004	;heigh: 8x8 pixels on mode 1 (2 bytes every 4 pixels)
 		ld 		a, enemy_c(ix)
 		call 	cpct_drawSolidBox_asm ;draw box itself
-	ret
+
+		;comprobamos si hay mas enemigos que pintar
+		siguiente_draw:
+		ld 		a, enemy_l(ix)
+		cp 		#1
+		ret 	z
+		
+		;sumamos posiciones de memoria hasta ir al siguiente enemigo
+		ld 		bc, #9 ;porque es el numero de variables
+		add 	ix, bc
+		jr 		repetimos_draw ;volvemos a comprobar si el siguiente esta activo o no
 
 
-	;==================
-	;   BORRAR enemyE
-	;==================	
 
-close:
-	ret
-
+;===================
+;   BORRA ENEMIGOS
+;===================
 erase_enemy::
+	
+	call enemyPtr
 
+	repetimos_borrar:
 	;comprobamos si el enemigo esta activado o no
 		ld 		a, enemy_a(ix)
 		cp 		#0
-		jr 		z, close
-		;ret 	nz
+		jr 		nz, borrar
+			jr 	siguiente_borrar
 
-
+		borrar:
 		ld 		de, #0xC000	;beginning of screen
 
 		ld 		c, enemy_x(ix) 		; b = hero_X
@@ -107,216 +116,101 @@ erase_enemy::
 		inc 	a
 		ld 		c, a
 
-
-
 		ld 		a, #0x00
 		call 	cpct_drawSolidBox_asm
 
-	ret
+		;comprobamos si hay mas enemigos que pintar
+		siguiente_borrar:
+		ld 		a, enemy_l(ix)
+		cp 		#1
+		ret 	z
+		
+		;sumamos posiciones de memoria hasta ir al siguiente enemigo
+		ld 		bc, #9 ;porque es el numero de variables
+		add 	ix, bc
+		jr 		repetimos_borrar ;volvemos a comprobar si el siguiente esta activo o no
 
 
-;;ANCIVAMOS ENEMIGOS TERRESTRES
 
+;=======================
+;   ACTIVAMOS ENEMIGOS
+;=======================
 activateEnemy::
-	
+	call 	enemyPtr
 
 	ld 		a, (time)
 	cp 		#0
-	jr 		z, comprobar1
+	jr 		z, comprobar
+		;EDITAR PARA MAS ENEMIGOS (DIFERENTES TIEMPOS)
 		dec a
 		ld 	(time), a
 		ret
 
-	comprobar1:
-
-	call 	enemy1Ptr
-
+	comprobar:
 	ld 	a, enemy_a(ix)
 	cp 	#0
-	jr 	nz, salirT
+	jr 	nz, comprobamos_siguiente ;ya esta activado
 		inc a
 		ld enemy_a(ix), a
 		call actualizar_time
 		ret
-
-	; comprobar2:
-
-	; call 	enemy2Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar3
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	;comprobar3:
-
-	; call 	enemy3Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, salirT
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	salirT:
-	ret
-
-	; comprobar4:
-	; call 	enemy4Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar5
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	; comprobar5:
-	; call 	enemy5Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar6
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	; comprobar6:
-	; call 	enemy6Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar7
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	; comprobar7:
-	; call 	enemy7Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar8
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	; comprobar8:
-	; call 	enemy8Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar9
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret		
-
-	; comprobar9:
-	; call 	enemy9Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; jr 	nz, comprobar10
-	; 	inc a
-	; 	ld enemy_a(ix), a
-	; 	call actualizar_time
-	; 	ret
-
-	; comprobar10:
-	; call 	enemy10Ptr
-
-	; ld 	a, enemy_a(ix)
-	; cp 	#0
-	; ret nz
-	
-	; inc a
-	; ld enemy_a(ix), a
-
-	; call actualizar_time
-	; ret
-
-
-;;ACTIVAMOS ENEMIGOS VOLADORES
-
-activateEnemyV::
-	
-
-	ld 		a, (time)
+	comprobamos_siguiente:
+	ld		a, enemy_l(ix)
 	cp 		#0
-	jr 		z, comprobarV1
-		dec a
-		ld 	(time), a
+	jr 		z, siguiente_activar 
+
+		;;Es el ultimo, salimos.
 		ret
 
-	comprobarV1:
-
-	call 	enemyV1Ptr
-
-	ld 	a, enemy_a(ix)
-	cp 	#0
-	jr 	nz, comprobarV2
-		inc a
-		ld enemy_a(ix), a
-		call actualizar_time
-		ret
-
-	comprobarV2:
-
-	call 	enemyV2Ptr
-
-	ld 	a, enemy_a(ix)
-	cp 	#0
-	jr 	nz, salirV
-		inc a
-		ld enemy_a(ix), a
-		call actualizar_time
-		ret
-
-	salirV:
-	ret
+	siguiente_activar:
+	;sumamos posiciones de memoria hasta ir al siguiente enemigo
+	ld 		bc, #9 ;porque es el numero de variables
+	add 	ix, bc
+	jr 		comprobar ;volvemos a comprobar si el siguiente esta activo o no
 
 
-
+;======================================================
+;   REINICIAR TEMPORIZADOR DE REGENERACION DE ENEMIGOS
+;======================================================
 actualizar_time:
 	ld 	a, #200
 	ld 	(time), a
 
 	ret
 
+;===========================================
+;   REINICIAR VELOCIDAD ENEMIGOS TERRESTRES
+;===========================================
 actualizarV_terrestres:
 	ld 	a, #5
 	ld 	(velocidadT), a
 
 	ret
 
-
+;==========================================
+;   REINICIAR VELOCIDAD ENEMIGOS VOLADORES
+;==========================================
 actualizarV_voladores:
-	ld 	a, #1
+	ld 	a, #5
 	ld 	(velocidadV), a
 
 	ret
 
-
-
-
 	
+;==================
+;   UPDATE ENEMIGO
+;==================
 updateEnemy::
 
-;comprobamos si el enemigo esta activado o no
+	call enemyPtr
+
+	repetimos_update:
+
+	;comprobamos si el enemigo esta activado o no
 	ld 		a, enemy_a(ix)
 	cp 		#0
 	jr 		nz, seguir
-		ret
+		jr 		siguiente_update
 
 	seguir:
 	;COMPROBAMOS SI ES TERRESTRE O VOLADOR
@@ -331,7 +225,8 @@ updateEnemy::
 			dec a
 			ld 	(velocidadV), a
 			call moveEnemy
-			ret
+			jr 	siguiente_update
+			;ret
 
 		actualizarV:
 		call actualizarV_voladores
@@ -343,59 +238,86 @@ updateEnemy::
 			dec a
 			ld 	(velocidadT), a
 			call moveEnemy
-			ret
+			jr 	siguiente_update
+			;ret
 
 		actualizarT:
 		call actualizarV_terrestres
 
 
+	;comprobamos si hay mas enemigos que pintar
+		siguiente_update:
+		ld 		a, enemy_l(ix)
+		cp 		#1
+		ret 	z
+		
+			;sumamos posiciones de memoria hasta ir al siguiente enemigo
+			ld 		bc, #9 ;porque es el numero de variables
+			add 	ix, bc
+			jr 		repetimos_update ;volvemos a comprobar si el siguiente esta activo o no
+			
+		;ret
 
-enemyV1Ptr::
-	ld 		ix, #enemyV1_data
+enemyPtr::
+	ld 		ix, #enemy1_data
+ret
+
+
+	;====================
+	; MOVIMIENTO ENEMIGO
+	;====================
+
+salir:
 	ret
 
-enemyV2Ptr::
-	ld 		ix, #enemyV2_data
+
+moveEnemy:
+
+	;comprobamos si el enemigo esta activado o no
+	ld 		a, enemy_a(ix)
+	cp 		#0
+	jr 		z, salir
+	;ret 	nz
+
+	;call 	enemyPtr		;carga el puntero de enemigo
+	ld 		a, enemy_d(ix)		;carga enemy_d
+	cp 		#1				;compara con 1
+	jr 		z, moveRight 	;enemy_d = 0??? Si es 0, se mueve a la derecha, si no, a la izda
+
+
+		;Se mueve a la izda
+
+		ld 		a, enemy_x(ix)		;a = enemy_x
+		cp 		#0 				;para comprobar colisiones con limite izdo
+		jr 		z, chocaLeft	;enemy_x = limite pantalla izda, no mover
+
+			; Si no choca, entonces movemos
+			dec  	a
+			ld 		enemy_x(ix), a
+			ret 
+		
+		;Si choca, acutalizamos enemy_d para que cambie de sentido a la derecha
+		chocaLeft:
+		ld 		a, #1
+		ld 		enemy_d(ix), a
+		
+		ret
+
+	;Se mueve a la derecha
+	moveRight:
+
+		ld 		a, enemy_x(ix)		;a = enemy_x
+		cp 		#80-4 			;para comprobar colisiones con limite dcho
+		jr 		z, chocaRight 	;enemy_x = limite pantalla dcha, no mover
+
+			; Si no choca, entonces movemos
+			inc  	a
+			ld 		enemy_x(ix), a
+			ret 
+		
+		;Si choca, acutalizamos enemy_d para que cambie de sentido a la izquierda
+		chocaRight:
+		ld 		a, #0
+		ld 		enemy_d(ix), a
+
 	ret
-
-
-enemy1Ptr::
-		ld 		ix, #enemy1_data
-	ret
-
-;enemy2Ptr::
-;		ld 		ix, #enemy2_data
-;	ret
-
-;enemy3Ptr::
-;		ld 		ix, #enemy3_data
-;	ret
-
-; enemy4Ptr::
-; 		ld 		ix, #enemy4_data
-; 	ret
-
-; enemy5Ptr::
-; 		ld 		ix, #enemy5_data
-; 	ret
-
-; enemy6Ptr::
-; 		ld 		ix, #enemy6_data
-; 	ret
-
-; enemy7Ptr::
-; 		ld 		ix, #enemy7_data
-; 	ret
-
-; enemy8Ptr::
-; 		ld 		ix, #enemy8_data
-; 	ret
-
-; enemy9Ptr::
-; 		ld 		ix, #enemy9_data
-; 	ret
-
-; enemy10Ptr::
-; 		ld 		ix, #enemy10_data
-; 	ret
-
