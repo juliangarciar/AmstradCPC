@@ -26,6 +26,29 @@
 	.equ	hero_j, 4
 	.equ 	hero_special_y, 5
 	.equ 	hero_special_h, 6
+	.equ 	hero_dir, 7
+;==========================================
+; 	SHOT CREATION
+;
+;	VARIABLES:
+;		x -> OX
+;		y -> OY
+;		h -> ALIVE
+;		h -> BALE_DIR
+;		
+; 	*name -> define a name for this entity
+;===========================================
+.macro defineBale name, x, y, a, bd
+	name'_data:
+		name'X: 	.db x
+		name'Y: 	.db y
+		name'A:	    .db a
+		name'BD: 	.db bd
+.endm
+	.equ	bale_x, 0
+	.equ	bale_y, 1
+	.equ	bale_a, 2
+	.equ 	bale_bd, 3
 ;==========================================
 ; 	OBSTACLE CREATION
 ;

@@ -9,14 +9,16 @@
 .include "keyboard/keyboard.s"
 .include "collision.h.s"
 
+;defineBale bale, 0, 0, 0, 0
+
 .area _CODE
 	;==================
 	; CONTROL CODE
 	;==================
 
 ;; ======= Variables bala ============
-alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
-dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
+;;alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
+;;dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
 
 ;SI NO COLISION, ME VOY
 no_colisiona:
@@ -25,45 +27,51 @@ no_colisiona:
 moveHeroRight:
 	call 	heroPtr
 	call 	spritePtr
+	;call    balePtr
+
 	ld 		a, hero_x(ix)	; ld a, (heroX)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
 	ret 	z  			;hero_x = limite pantalla dcha, no mover
 
 
 		inc 	hero_x(ix)
-		ld 		a, #1
-		ld 		sprite_pos(iy), a
+		;ld 		a, #1
+		ld 		sprite_pos(iy), #1
+		ld 		hero_dir(ix), #2
 		;ld 		a, #2
 		;call 	checkCollision
 		;cp 		#1
 		;jr 		nz, no_colisiona
 
 			;dec  	0(ix)
-
+			;call balePtr
 		;; Cambiamos la direccion de la bala si la bala esta muerta,
 		;; si esta viva, no hacemos nada
-		ld   a, (alive)
-		cp   #1
-		jr   z, alive_bale1
+		;ld   a, bale_a(ix)
+		;cp   #1
+		;jr   z, alive_bale1
 
 			;; Si la bala esta muerta, entonces ponemos su nueva direccion
-			ld   a, #2
-  			ld   (dir_bale), a      ;; Ponemos la nueva direccion de la bala
+			;ld   a, #2
+  			;ld   bale_bd(ix), a      ;; Ponemos la nueva direccion de la bala
 
-  		alive_bale1:
+  		;alive_bale1:
 
 	ret
 ;MOVER HEROE A LA IZQUIERDA
 moveHeroLeft:
 	call 	heroPtr
 	call 	spritePtr
+	;call    balePtr
+
 	ld 		a, hero_x(ix)
 	cp 		#0			;limite izquierda
 	ret 	z			;hero_x = limite pantalla izda
 
 		dec 	hero_x(ix)	
-		ld 		a, #2
-		ld 		sprite_pos(iy), a
+		;ld 		a, #2
+		ld 		sprite_pos(iy), #2
+		ld 		hero_dir(ix), #1
 		;ld 		a, #2
 		;call 	checkCollision
 		;cp 		#1
@@ -71,34 +79,29 @@ moveHeroLeft:
 
 			;inc 	0(ix)
 
+			;call balePtr
 		;; Cambiamos la direccion de la bala si la bala esta muerta,
 		;; si esta viva, no hacemos nada
-		ld   a, (alive)
-		cp   #1
-		jr   z, alive_bale2
+		;ld   a, bale_a(ix)
+		;cp   #1
+		;jr   z, alive_bale2
 
 			;; Si la bala esta muerta, entonces ponemos su nueva direccion
-			ld   a, #1
-  			ld   (dir_bale), a      ;; Ponemos la nueva direccion de la bala
+			;ld   a, #1
+  			;ld   bale_bd(ix), #1      ;; Ponemos la nueva direccion de la bala
 
-  		alive_bale2:
+  		;alive_bale2:
 
 	ret
 
-;moveHeroUp:
-;	call heroPtr
-;	ld 		a, 1(ix)
-;	cp 		#0			;limite izquierda
-;	ret 	z		;hero_x = limite pantalla izda
+shootUp:
+	call 	heroPtr
+	;call 	spritePtr
+	;call    balePtr
 
-;		dec 	1(ix)
-		;ld 		a, #2
-		;call 	checkCollision
-		;cp 		#1
-		;jr 		nz, no_colisiona
-
-		;	inc 	1(ix)
-;	ret
+		;ld 		sprite_pos(iy), #2
+		ld 		hero_dir(ix), #3
+	ret
 
 ;moveHeroDown:
 ;	call heroPtr
@@ -294,25 +297,26 @@ checkUserInput::
 	ld     hl, #Key_P              ;; HL = Key_W_Keycode
 	call   cpct_isKeyPressed_asm   ;; Check if Key_W is presset 
   	cp     #0                      ;; Check A == 0
-  	jr      z, p_not_pressed       ;; Jump if A == 0 ('W' not pressed) 
+  	jr     z, p_not_pressed       ;; Jump if A == 0 ('W' not pressed) 
+
 
   		;; P is pressed
-  		ld   a, (dir_bale)
+  		;ld   a, bale_bd(ix)
   		call check_shot
 
 	p_not_pressed:
 
 	;TECLA W
 
-	;ld 		hl, #Key_W
-	;call 	cpct_isKeyPressed_asm
-	;cp 		#0
-	;jr 		z, upNotPressed
+	ld 		hl, #Key_W
+	call 	cpct_isKeyPressed_asm
+	cp 		#0
+	jr 		z, nothingPressed
 
 			;ELSE MOVE LEFT 
-	;		call moveHeroUp
+			call shootUp
 
-	;upNotPressed:
+	upNotPressed:
 
 	;TECLA S
 
