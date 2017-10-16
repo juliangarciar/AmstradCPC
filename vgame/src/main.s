@@ -49,15 +49,26 @@
 	
 			main_bucle:
 			call 	erase_hero
+
+			;;BORRAMOS VOLADORES
+			;EnemyV1
+			call	enemyV1Ptr
+			call 	erase_enemy
+			;EnemyV2
+			call	enemyV2Ptr
+			call 	erase_enemy	 
+
+
+			;;BORRAMOS TERRESTRES
 			;Enemy1
 			call	enemy1Ptr
 			call 	erase_enemy
 			;Enemy2
-			call	enemy2Ptr
-			call 	erase_enemy	
+			;call	enemy2Ptr
+			;call 	erase_enemy	
 			;Enemy3
-			call	enemy3Ptr
-			call 	erase_enemy
+			;call	enemy3Ptr
+			;call 	erase_enemy
 
 			; call	enemy4Ptr
 			; call 	erase_enemy
@@ -84,23 +95,42 @@
 			call	jump_control
 			call    shot_update
 			call 	checkUserInput
-			call 	drawObstacles
+			;call 	drawObstacles
 			;DOBLE EFECTO DOBLE DIVERSION
 			call 	updateHero
 			call 	updateHero
 			call 	draw_hero
 
 			call 	activateEnemy	;comprobamos si el enemigo esta activo o no
+			call	activateEnemyV
+
+			call 	enemy1Ptr
 			call	updateEnemy
+			call 	enemyV1Ptr
+			call	updateEnemy
+			call 	enemyV2Ptr
+			call	updateEnemy
+
 			;Dibujamos todos los enemigos
+
+			;;VOLADORES
+			call 	enemyV1Ptr
+			call	draw_enemy
+
+			call 	enemyV2Ptr
+			call	draw_enemy
+
+
+			;;TERRESTRES
+
 			call 	enemy1Ptr
 			call	draw_enemy
 
-			call 	enemy2Ptr
-			call	draw_enemy
+			;call 	enemy2Ptr
+			;call	draw_enemy
 
-			call 	enemy3Ptr
-			call	draw_enemy
+			;call 	enemy3Ptr
+			;call	draw_enemy
 
 			; call 	enemy4Ptr
 			; call	draw_enemy
