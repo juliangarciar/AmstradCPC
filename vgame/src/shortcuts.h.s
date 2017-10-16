@@ -17,6 +17,7 @@
 		name'J:		.db #-1
 		name'SY: 	.db sy 
 		name'SH: 	.db #1
+		name'D: 	.db #2
 .endm
 	.equ	hero_x, 0
 	.equ	hero_y, 1
@@ -59,7 +60,7 @@
 ;		y -> OY
 ;		w -> WIDTH
 ;		h -> HEIGHT
-;		d -> DEFINE IF IT'S THE LAST ONE 
+;		d -> DEFINE IF IT'S THE DIR
 ;		c -> DEFINE ITS COLOUR
 ;		a -> DEFINE IF IT'S ACTIVE
 ; 			== 1 -> YES
@@ -84,6 +85,7 @@
 		name'T: 	.db t
 		name'L:		.db l
 .endm
+;MODIFICAR
 	.equ	enemy_x, 0
 	.equ	enemy_y, 1
 	.equ	enemy_w, 2

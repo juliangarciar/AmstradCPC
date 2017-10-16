@@ -2,7 +2,6 @@
 .include "shortcuts.h.s"
 .include "shot.h.s"
 .include "hero.h.s"
-.include "keyboard/keyboard.s"
 .include "cpctelera.h.s"
 
 .area _CODE

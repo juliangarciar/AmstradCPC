@@ -1,12 +1,7 @@
 .area _DATA
-	;==================
-	;;;PRIVATE DATA
-	;==================
-
-	;==================
-	;;;PUBLIC DATA
-	;==================
-
+;==================
+; INCLUDE FUNCIONS
+;==================
 .area _CODE
 .include "cpctelera.h.s"
 .include "control.h.s"
@@ -19,9 +14,10 @@
 unavariable: .db #0x10
 ;.globl  _g_tileset
 ;.globl 	_level1
-	;==================
-	;;;INCLUDE FUNCIONS
-	;==================
+;========================
+; 	INTERRUPTS
+;
+;========================
 	isr:
 		ld 		l, #16
 		ld  	a, (unavariable)
@@ -35,11 +31,16 @@ unavariable: .db #0x10
 		jr 		nz, continue
 
 			ld 		a, #0x10
+
 		continue:
 			ld 		(unavariable), a
 
 		;call cpct_setInterruptHandler_asm
 	ret
+;========================
+; 	INIT THE GAME
+;
+;========================
 	init:
 		call 	cpct_disableFirmware_asm	;disable firmware so we can set another options
 		;ld a, (0x0039) 					;saves data from firmware location
@@ -63,6 +64,10 @@ unavariable: .db #0x10
 		;ld 		a, 	#19
 		;call cpct_etm_drawTileBox2x4_asm	
 	ret
+;========================
+; 	MAIN PROGRAM
+;
+;========================
 	_main::
 		call init
 		;INTERRUPTS
