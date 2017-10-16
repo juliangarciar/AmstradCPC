@@ -3,16 +3,13 @@
 .include "cpctelera.h.s"
 .include "shot.h.s"
 .include "hero.h.s"
-<<<<<<< HEAD
 .include "cpctelera.h.s"
 
 .area _CODE
 
-=======
 
 defineBale bale, 0, 0, 0, 2  
 ;defineBale bale
->>>>>>> 4ce86099fc91bc12d3cd41cbc840d09c4bd6b085
 
 ; ======= Variables bala ============
 ;; Lo ponemos a 0 para luego ir modificandola
@@ -22,14 +19,10 @@ defineBale bale, 0, 0, 0, 2
 ;alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
 ;dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
 
-<<<<<<< HEAD
-check_shot::
 
-=======
-check_shot:
+check_shot::
 	call balePtr
 	
->>>>>>> 4ce86099fc91bc12d3cd41cbc840d09c4bd6b085
 	;; Recogemos y guardamos el valor de a en b, que en este caso es
 	;; la direcion de la bala (dir_bale)
 	;ld   b, a
