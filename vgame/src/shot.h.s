@@ -5,3 +5,4 @@
 ;;==============================================================
 .globl shot_update
 .globl check_shot
+.globl balePtr

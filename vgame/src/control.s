@@ -9,14 +9,16 @@
 .include "keyboard/keyboard.s"
 .include "collision.h.s"
 
+;defineBale bale, 0, 0, 0, 0
+
 .area _CODE
 	;==================
 	; CONTROL CODE
 	;==================
 
 ;; ======= Variables bala ============
-alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
-dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
+;;alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
+;;dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
 
 ;SI NO COLISION, ME VOY
 no_colisiona:
@@ -25,6 +27,8 @@ no_colisiona:
 moveHeroRight:
 	call 	heroPtr
 	call 	spritePtr
+	;call    balePtr
+
 	ld 		a, hero_x(ix)	; ld a, (heroX)
 	cp 		#80-4 		;para comprobar colisiones con limite derecho
 	ret 	z  			;hero_x = limite pantalla dcha, no mover
@@ -39,16 +43,16 @@ moveHeroRight:
 		;jr 		nz, no_colisiona
 
 			;dec  	0(ix)
-
+			call balePtr
 		;; Cambiamos la direccion de la bala si la bala esta muerta,
 		;; si esta viva, no hacemos nada
-		ld   a, (alive)
+		ld   a, bale_a(ix)
 		cp   #1
 		jr   z, alive_bale1
 
 			;; Si la bala esta muerta, entonces ponemos su nueva direccion
 			ld   a, #2
-  			ld   (dir_bale), a      ;; Ponemos la nueva direccion de la bala
+  			ld   bale_bd(ix), a      ;; Ponemos la nueva direccion de la bala
 
   		alive_bale1:
 
@@ -57,6 +61,8 @@ moveHeroRight:
 moveHeroLeft:
 	call 	heroPtr
 	call 	spritePtr
+	;call    balePtr
+
 	ld 		a, hero_x(ix)
 	cp 		#0			;limite izquierda
 	ret 	z			;hero_x = limite pantalla izda
@@ -70,16 +76,17 @@ moveHeroLeft:
 		;jr 		nz, no_colisiona
 
 			;inc 	0(ix)
-
+			
+			call balePtr
 		;; Cambiamos la direccion de la bala si la bala esta muerta,
 		;; si esta viva, no hacemos nada
-		ld   a, (alive)
+		ld   a, bale_a(ix)
 		cp   #1
 		jr   z, alive_bale2
 
 			;; Si la bala esta muerta, entonces ponemos su nueva direccion
-			ld   a, #1
-  			ld   (dir_bale), a      ;; Ponemos la nueva direccion de la bala
+			;ld   a, #1
+  			ld   bale_bd(ix), #1      ;; Ponemos la nueva direccion de la bala
 
   		alive_bale2:
 
@@ -294,10 +301,11 @@ checkUserInput::
 	ld     hl, #Key_P              ;; HL = Key_W_Keycode
 	call   cpct_isKeyPressed_asm   ;; Check if Key_W is presset 
   	cp     #0                      ;; Check A == 0
-  	jr      z, p_not_pressed       ;; Jump if A == 0 ('W' not pressed) 
+  	jr     z, p_not_pressed       ;; Jump if A == 0 ('W' not pressed) 
+
 
   		;; P is pressed
-  		ld   a, (dir_bale)
+  		ld   a, bale_bd(ix)
   		call check_shot
 
 	p_not_pressed:
