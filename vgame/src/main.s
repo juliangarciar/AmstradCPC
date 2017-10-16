@@ -15,11 +15,30 @@
 .include "shot.h.s"
 .include "collision.h.s"
 .globl 	_sprite_palette
+unavariable: .db #0x10
 ;.globl  _g_tileset
 ;.globl 	_level1
 	;==================
 	;;;INCLUDE FUNCIONS
 	;==================
+	isr:
+		ld 		l, #16
+		ld  	a, (unavariable)
+		ld 		h, a
+		
+		call 	cpct_setPALColour_asm
+
+		ld  	a, (unavariable)
+		inc 	a
+		cp 		#0x16
+		jr 		nz, continue
+
+			ld 		a, #0x10
+		continue:
+			ld 		(unavariable), a
+
+		;call cpct_setInterruptHandler_asm
+	ret
 	init:
 		call 	cpct_disableFirmware_asm	;disable firmware so we can set another options
 		;ld a, (0x0039) 					;saves data from firmware location
@@ -45,7 +64,9 @@
 	ret
 	_main::
 		call init
-	
+		;INTERRUPTS
+		ld 		hl, #isr
+		call 	cpct_setInterruptHandler_asm
 			main_bucle:
 			call 	erase_hero
 

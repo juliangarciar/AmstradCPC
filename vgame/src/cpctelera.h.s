@@ -25,3 +25,5 @@
 .globl cpct_setPalette_asm
 .globl cpct_etm_setTileset2x4_asm
 .globl cpct_etm_drawTileBox2x4_asm
+.globl cpct_setPALColour_asm
+.globl cpct_setInterruptHandler_asm

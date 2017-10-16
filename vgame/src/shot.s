@@ -1,16 +1,12 @@
-.area _CODE
-
+.area _DATA
 .include "shortcuts.h.s"
 .include "shot.h.s"
 .include "hero.h.s"
 .include "keyboard/keyboard.s"
+.include "cpctelera.h.s"
 
-;; CPCtelera Symbols
-.globl cpct_drawSolidBox_asm
-.globl cpct_getScreenPtr_asm
-.globl cpct_scanKeyboard_asm 
-.globl cpct_isKeyPressed_asm
-.globl cpct_waitVSYNC_asm
+.area _CODE
+
 
 ; ======= Variables bala ============
 ;; Lo ponemos a 0 para luego ir modificandola
@@ -20,7 +16,7 @@ bale_y:   .db #0
 alive:    .db #0 ;; (0 o 1) en funcion de si esta activada o no la bala
 dir_bale: .db #0 ;; (0, 1, 2) variable que controla la direccion de la bala 
 
-check_shot:
+check_shot::
 
 	;; Recogemos y guardamos el valor de a en b, que en este caso es
 	;; la direcion de la bala (dir_bale)
