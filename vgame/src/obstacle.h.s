@@ -1,2 +1,0 @@
-.globl drawObstacles
-.globl obsPtr

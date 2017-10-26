@@ -1,8 +1,6 @@
-;;==============================================================
-;;==============================================================
-;; SHOT PUBLIC FUNCTIONS
-;;==============================================================
-;;==============================================================
-.globl shot_update
-.globl check_shot
-.globl balePtr
+.globl drawShot
+.globl eraseShot
+.globl updateShot
+.globl checkShot
+.globl shotPtrX
+.globl shotPtrY

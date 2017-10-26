@@ -1,7 +1,7 @@
-.globl draw_enemy
-.globl erase_enemy
+.globl checkEnemy
+.globl eraseEnemy
+.globl drawEnemy
 .globl updateEnemy
-
-.globl activateEnemy
-
-.globl enemyPtr
+.globl enemyPtrX
+.globl enemyPtrY
+.globl checkTimer

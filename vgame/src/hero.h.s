@@ -1,7 +1,5 @@
-.globl draw_hero
-.globl erase_hero
-.globl jumptable
-.globl heroPtr
-.globl spritePtr
+.globl drawHero
+.globl eraseHero
 .globl updateHero
+.globl heroPtrX
 .globl heroPtrY

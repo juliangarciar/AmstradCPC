@@ -72,4 +72,22 @@ $(eval $(call IMG2SPRITES,assets/hero1.png,0,sprite,8,16,$(PALETTE),,src/sprites
 $(eval $(call IMG2SPRITES,assets/hero2.png,0,sprite,8,16,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/hero3.png,0,sprite,8,16,$(PALETTE),,src/sprites,))
 
+##$(eval $(call IMG2SPRITES,assets/shot1.png,0,sprite,4,3,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/shot2.png,0,sprite,4,3,$(PALETTE),,src/sprites,))
+##
+##$(eval $(call IMG2SPRITES,assets/fire1.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/fire2.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/red1.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/red2.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
+##
+##$(eval $(call IMG2SPRITES,assets/blue.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/mierda.png,0,sprite,14,16,$(PALETTE),,src/sprites,))
+##$(eval $(call IMG2SPRITES,assets/astro.png,0,sprite,28,42,$(PALETTE),,src/sprites,))
+
+$(eval $(call IMG2SPRITES,assets/def1.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/def2.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/def3.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
+
+$(eval $(call IMG2SPRITES,assets/enemy1.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+
 #$(eval $(call IMG2SPRITES,assets/paleta_mapa.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))

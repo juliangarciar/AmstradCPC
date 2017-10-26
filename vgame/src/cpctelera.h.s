@@ -27,3 +27,4 @@
 .globl cpct_etm_drawTileBox2x4_asm
 .globl cpct_setPALColour_asm
 .globl cpct_setInterruptHandler_asm
+.globl cpct_scanKeyboard_if_asm

@@ -1,73 +1,44 @@
 .area _DATA
 	;========================
-	; ENCABEZADOS REQUERIDOS
+	; REQUIRED HEADERS
 	;========================
 .include "shortcuts.h.s"
 .include "cpctelera.h.s"
 .include "hero.h.s"
-.include "obstacle.h.s"
+.include "enemy.h.s"
+.include "shot.h.s"
 
 .area _CODE
+
+
+checkCollision::
+	call 	enemyPtrY
 	;==========================================
 	; 	COLLISION CODE
 	;
 	;	DESTROYS: A, BC, IX, IY, DE
 	;	MODES:
-	;		A == 1 -> Jump collision
-	;		A == 2 -> Enemy collision
-	;		A == 3 -> Hero bullets collision
+	;		A == 2 -> Jump collision
+	;		A == ?? -> Enemy collision NOT IMPLEMENTED
+	;		A == 1 -> Hero bullets collision
 	;	RETURNS: A
 	; 		A == 1 -> Objects collide
 	;		A == 0 -> Objects doesn't collide
 	;===========================================
 
-checkCollision::
-	ld 		d, a 					;ALMACENAMOS EN 'D' EL MODO
-	;cp 		#1						;
-	;jr 		z, enemyMode			;
-	;	cp 		#1					;
-	;	jr 		z, bulletMode		;	
-			cp 		#1				;
-			jr 		z, jumpMode		;
-									;EN FUNCION DEL MODO, CARGAMOS LOS REGISTROS
-	enemyMode:						;'IY', 'IX'
-		;call 	heroPtr
-		;call 	enemyPtr
-	;jr 		collisionBucle
-	bulletMode:
-
-		;call 	bulletPtr
-		;call 	enemyPtr
-	;jr 		collisionBucle
-	jumpMode:
-		call 	obsPtr				;CARGAMOS EN 'IY' EL PUNTERO OBS (Obstaculo)
-		call 	heroPtr				;CARGAMOS EN 'IX' EL PUNTERO HERO
-	jr 		collisionBucle
-	specialMode:
-		ld 		c, obs_y(iy)
-		ld 		b, hero_special_y(ix)
-		ld 		a, hero_special_h(ix)
-		add 	a, b
-		sub 	c
-		jp 		m, noCollision
-			ld 		c, hero_special_y(ix)
-			ld 		b, obs_y(iy)
-			ld 		a, obs_h(iy)
-			add 	a, b
-			sub 	c
-			jp 		m, noCollision
-				jp 		checkX
-	ret
-	collisionBucle:
+collisionBucle:
+	ld 		a, obs_alive(iy)
+	cp 		#0
+	jr 		z, noCollision
 	;Evaluamos las condiciones para que no colisione
 	;en caso contrario, colisionara
 	;Comprobar el eje Y primero lado SUPERIOR, ya que es más probable que colisione
 	;en el eje X
 	;Cargamos posicion del obstaculo_y
 	;la guardamos en el almacen c
-	ld 		a, d 			;CHECK IF IT'S SPECIAL MODE ACTIVE
-	cp 		#1				;
-	jr 		z, specialMode 	;JP IF IT IS 		
+	;ld 		a, d 			;CHECK IF IT'S SPECIAL MODE ACTIVE
+	;cp 		#2				;
+	;jr 		z, specialMode 	;JP IF IT IS 		
 	checkY:
 	ld 		c, obs_y(iy)
 	;Cargamos posicion del heroe_y
@@ -116,7 +87,8 @@ checkCollision::
 						; para poder evaluar desde fuera si colisiona
 						ld 		hl, #0xC050
 						ld 		(hl), #0xF0
-
+						ld 		a, #0
+						ld 		obs_alive(iy), a
 						ld 		a, #1
 					ret
 	;EN CASO DE NO COLISIONAR
@@ -130,9 +102,10 @@ checkCollision::
 			ld 		(hl), #0xFF
 
 			ld 		a, #0
-	ret
+		ret
 	;REPITE EL BUCLE SI HAY MAS OBJETOS
 	repeat:
-		ld 		bc, #5
+		ld 		bc, #7
 		add 	iy, bc
 		jr		collisionBucle
+	

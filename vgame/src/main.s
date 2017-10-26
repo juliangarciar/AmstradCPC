@@ -2,16 +2,17 @@
 ;==================
 ; INCLUDE FUNCIONS
 ;==================
-.area _CODE
 .include "cpctelera.h.s"
 .include "control.h.s"
-.include "obstacle.h.s"
 .include "hero.h.s"
 .include "shot.h.s"
-.include "collision.h.s"
 .include "enemy.h.s"
 .globl 	_sprite_palette
-unavariable: .db #0x10
+
+;unavariable: .db #0x10
+
+.area _CODE
+
 ;.globl  _g_tileset
 ;.globl 	_level1
 ;========================
@@ -19,23 +20,27 @@ unavariable: .db #0x10
 ;
 ;========================
 	isr:
-		ld 		l, #16
-		ld  	a, (unavariable)
-		ld 		h, a
+		;ld 		l, #16
+		;ld  	a, (unavariable)
+		;ld 		h, a
+		;
+		;call 	cpct_setPALColour_asm
+;
+;		;ld  	a, (unavariable)
+;		;inc 	a
+;		;cp 		#0x16
+;		;jr 		nz, continue
+;
+;		;	ld 		a, #0x10
+;		;	
+;		;continue:
+		;	ld 		(unavariable), a
 		
-		call 	cpct_setPALColour_asm
+		call 	cpct_scanKeyboard_if_asm
 
-		ld  	a, (unavariable)
-		inc 	a
-		cp 		#0x16
-		jr 		nz, continue
-
-			ld 		a, #0x10
-
-		continue:
-			ld 		(unavariable), a
-
+		
 		;call cpct_setInterruptHandler_asm
+		
 	ret
 ;========================
 ; 	INIT THE GAME
@@ -49,7 +54,6 @@ unavariable: .db #0x10
 		ld 		hl, #_sprite_palette
 		ld 		de, #16
 		call 	cpct_setPalette_asm
-		call 	drawObstacles	
 			;==================
 			;  DIBUJAR NIVEL
 			;==================
@@ -74,22 +78,23 @@ unavariable: .db #0x10
 		ld 		hl, #isr
 		call 	cpct_setInterruptHandler_asm
 			main_bucle:
-			call 	erase_hero
-			call 	erase_enemy
-
+			call 	eraseEnemy
+			call 	eraseShot
+			call 	eraseHero
 			;HACER UN UPDATE DE CONTROL
-			call	jump_control
-			call    shot_update
-			call 	checkUserInput
-			;call 	drawObstacles
-			;DOBLE EFECTO DOBLE DIVERSION
-			call 	activateEnemy
-			call 	updateEnemy
-			call 	updateHero
-			;call 	updateHero
 
-			call 	draw_enemy
-			call 	draw_hero
+			call 	checkTimer
+			call 	checkShotTime
+			call 	checkEnemy
+			call 	checkUserInput
+
+			call 	updateEnemy
+			call    updateShot
+			call 	updateHero
+			
+			call 	drawEnemy
+			call 	drawShot
+			call 	drawHero
 
 			call 	cpct_waitVSYNC_asm
 			jr		main_bucle
