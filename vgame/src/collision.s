@@ -85,27 +85,27 @@ collisionBucle:
 						;Sillega aqui es porque colisiona,
 						;cargamos en el registro A un valor
 						; para poder evaluar desde fuera si colisiona
-						ld 		hl, #0xC050
-						ld 		(hl), #0xF0
-						ld 		a, #0
-						ld 		obs_alive(iy), a
+		
+						;ld 		a, #0
+						;ld 		obs_alive(iy), a
+						dec 	obs_alive(iy)
+						call 	eraseEnemyMark
 						ld 		a, #1
 					ret
 	;EN CASO DE NO COLISIONAR
 	noCollision:
 		;COMPROBAMOS SI HEMOS LLEGADO AL FINAL DE LOS OBJETOS
+
+
 		ld 		a, obs_l(iy)
 		cp 		#1
-		jr 		z, repeat
+		jr 		nz, repeat
 			;SI NO HAY MAS, CARGA NO COLISION Y NOS VAMOS
-			ld 		hl, #0xC050
-			ld 		(hl), #0xFF
-
 			ld 		a, #0
 		ret
 	;REPITE EL BUCLE SI HAY MAS OBJETOS
 	repeat:
-		ld 		bc, #7
+		ld 		bc, #9
 		add 	iy, bc
 		jr		collisionBucle
 	

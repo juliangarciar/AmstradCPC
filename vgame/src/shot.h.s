@@ -4,3 +4,4 @@
 .globl checkShot
 .globl shotPtrX
 .globl shotPtrY
+.globl eraseShotMark

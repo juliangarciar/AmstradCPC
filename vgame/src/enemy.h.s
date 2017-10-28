@@ -5,3 +5,5 @@
 .globl enemyPtrX
 .globl enemyPtrY
 .globl checkTimer
+.globl checkAnimationTimer
+.globl eraseEnemyMark

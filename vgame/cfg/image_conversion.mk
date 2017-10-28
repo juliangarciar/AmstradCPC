@@ -88,6 +88,12 @@ $(eval $(call IMG2SPRITES,assets/def1.png,0,sprite,6,5,$(PALETTE),,src/sprites,)
 $(eval $(call IMG2SPRITES,assets/def2.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/def3.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
 
-$(eval $(call IMG2SPRITES,assets/enemy1.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy31.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy32.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy33.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy34.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+
+$(eval $(call IMG2SPRITES,assets/hero11.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/hero12.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 
 #$(eval $(call IMG2SPRITES,assets/paleta_mapa.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))

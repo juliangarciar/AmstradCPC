@@ -15,12 +15,16 @@
 		name'W: 	.db w
 		name'H: 	.db h
 		name'Spr: 	.db #0
+		name'SX: 	.db x
+		name'SY: 	.db y
 .endm
 	.equ	hero_x, 0
 	.equ	hero_y, 1
 	.equ	hero_w, 2
 	.equ	hero_h, 3
 	.equ 	hero_sprite, 4
+	.equ 	hero_SX, 5
+	.equ 	hero_SY, 6
 ;==========================================
 ; 	SHOT CREATION
 ;
@@ -41,6 +45,8 @@
 		name'Spr: 	.db #0
 		name'A:	    .db #0
 		name'Last: 	.db l
+		name'SX: 	.db #0
+		name'SY: 	.db #0
 .endm
 	.equ	shot_x, 0
 	.equ	shot_y, 1
@@ -49,6 +55,8 @@
 	.equ 	shot_sprite, 4
 	.equ	shot_alive, 5
 	.equ 	shot_last, 6
+	.equ 	shot_SX, 7
+	.equ 	shot_SY, 8
 ;==========================================
 ; 	OBSTACLE CREATION
 ;
@@ -106,6 +114,8 @@
 		name'Spr: 	.db #0
 		name'A:	    .db #0
 		name'Last: 	.db l
+		name'SX: 	.db #0
+		name'SY: 	.db #0
 		
 .endm
 ;MODIFICAR
@@ -116,7 +126,8 @@
 	.equ 	enemy_sprite, 4
 	.equ	enemy_alive, 5
 	.equ 	enemy_last, 6
-
+	.equ 	enemy_SX, 7
+	.equ 	enemy_SY, 8
 	
 ;==========================================
 ; 	SPRITE HERO

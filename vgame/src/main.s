@@ -7,6 +7,8 @@
 .include "hero.h.s"
 .include "shot.h.s"
 .include "enemy.h.s"
+.include "buffer.h.s"
+
 .globl 	_sprite_palette
 
 ;unavariable: .db #0x10
@@ -48,6 +50,7 @@
 ;========================
 	init:
 		call 	cpct_disableFirmware_asm	;disable firmware so we can set another options
+		
 		;ld a, (0x0039) 					;saves data from firmware location
 		ld 		c, #0 						;load video mode 0 on screen
 		call 	cpct_setVideoMode_asm
@@ -74,29 +77,39 @@
 ;========================
 	_main::
 		call init
+		ld sp, #0x8000
 		;INTERRUPTS
 		ld 		hl, #isr
 		call 	cpct_setInterruptHandler_asm
+		call 	initializeVideoMemory
 			main_bucle:
+			
 			call 	eraseEnemy
 			call 	eraseShot
+			
 			call 	eraseHero
 			;HACER UN UPDATE DE CONTROL
+			
 
 			call 	checkTimer
+			;call 	checkAnimationTimer
 			call 	checkShotTime
 			call 	checkEnemy
-			call 	checkUserInput
-
+			
 			call 	updateEnemy
-			call    updateShot
+			call   	updateShot
+			
 			call 	updateHero
+			call 	checkUserInput
 			
 			call 	drawEnemy
 			call 	drawShot
+			
 			call 	drawHero
 
+			
 			call 	cpct_waitVSYNC_asm
+			call	toggleVideoMemory
 			jr		main_bucle
 
 		ret

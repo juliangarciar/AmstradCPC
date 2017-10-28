@@ -1,16 +1,23 @@
 .area _DATA
 .include "shortcuts.h.s"
 .include "cpctelera.h.s"
+.include "buffer.h.s"
 
-defineEnemy enemy, 8, 16, 0
+defineEnemy enemy , 8, 16, 0
 defineEnemy enemy2, 8, 16, 0
 defineEnemy enemy3, 8, 16, 0
 defineEnemy enemy4, 8, 16, 1
 
 enemyTime: .db #40
 enemyHigh: .db #13
+enemyAnimation: .db #0
+enemyAnimationTimer: .db #0
 
-.globl _sprite_enemy1
+.globl _sprite_enemy31
+.globl _sprite_enemy32
+.globl _sprite_enemy33
+.globl _sprite_enemy34
+
 .area _CODE
 drawEnemy::
 	ld 		ix, #enemy_data
@@ -18,12 +25,15 @@ drawEnemy::
 		ld 		a, enemy_alive(ix) 			;Check if the shot is alive
 		cp 		#0
 		jr		z, jumpNextEnemyDraw
-			ld 		de, #0xC000
+			ld 		a, (buffer_start)
+			ld 		d, a
+			ld 		e, #0x00
 			ld 		c, enemy_x(ix)
 			ld 		b, enemy_y(ix)
 			call 	cpct_getScreenPtr_asm
 
 			ex 		de, hl
+			;ld 		a, (enemyAnimation)
 			ld 		a, enemy_sprite(ix)
 			cp 		#0
 			jr 		z, Enemy1Draw
@@ -31,14 +41,24 @@ drawEnemy::
 				jr 		z, Enemy2Draw
 					cp 		#2
 					jr 		z, Enemy3Draw
+						cp 		#3
+						jr 		z, Enemy4Draw
+							cp 		#4
+							jr 		z, Enemy5Draw
 			Enemy1Draw:
-				ld 		hl, #_sprite_enemy1
+				ld 		hl, #_sprite_enemy31
 				jp 		continueEnemyDraw
 			Enemy2Draw:
-				ld 		hl, #_sprite_enemy1
+				ld 		hl, #_sprite_enemy32
 				jp 		continueEnemyDraw
 			Enemy3Draw:
-				ld 		hl, #_sprite_enemy1
+				ld 		hl, #_sprite_enemy33
+				jp 		continueEnemyDraw
+			Enemy4Draw:
+				ld 		hl, #_sprite_enemy32
+				jp 		continueEnemyDraw
+			Enemy5Draw:
+				ld 		hl, #_sprite_enemy34
 			continueEnemyDraw:
 				ld 		b, enemy_h(ix)
 				ld 		c, enemy_w(ix)
@@ -48,7 +68,7 @@ drawEnemy::
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #7
+				ld 		bc, #9
 				add 	ix, bc
 				jr 		drawEnemyBucle
 eraseEnemy::
@@ -57,8 +77,10 @@ eraseEnemy::
 		ld 		a, enemy_alive(ix) 			;Check if the shot is alive
 		cp 		#0
 		jr		z, jumpNextEnemyErase
-			ld 		de, #0xC000
-			ld 		c, enemy_x(ix)
+			ld 		a, (buffer_start)
+			ld 		d, a
+			ld 		e, #0x00
+			ld 		c, enemy_SX(ix)
 			ld 		b, enemy_y(ix)
 			call 	cpct_getScreenPtr_asm
 
@@ -74,39 +96,44 @@ eraseEnemy::
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #7
+				ld 		bc, #9
 				add 	ix, bc
 				jr 		eraseEnemyBucle
 updateEnemy::
-	ld 		ix, #enemy_data
+	ld 		iy, #enemy_data
 	updateEnemyBucle:
-		ld 		a, enemy_alive(ix)
+		ld 		a, enemy_alive(iy)
 		cp 		#0
 		jr 		z, jumpNextEnemyUpdate
 			;Haz cosas
-			ld 		a, enemy_x(ix)
+			ld 		a, enemy_x(iy)
 			cp 		#4
 			jr 		z, destroyEnemy
 
-				dec 	enemy_x(ix)
-				ld 		a, enemy_sprite(ix)
-				cp 		#2
+				ld 		enemy_SX(iy), a
+				dec 	enemy_x(iy)
+				;jr 		jumpNextEnemyUpdate
+				ld 		a, enemy_sprite(iy)
+				cp 		#4
 				jr 		z, swap1
-					inc 	enemy_sprite(ix)
+					inc 	enemy_sprite(iy)
 					jr 		jumpNextEnemyUpdate
 				swap1:
 				ld 		a, #0
-				ld 		enemy_sprite(ix), a
+				ld 		enemy_sprite(iy), a
 				jr 		jumpNextEnemyUpdate
 			destroyEnemy:
 			ld 		a, #0
-			ld 		enemy_alive(ix), a
+			ld 		enemy_alive(iy), a
+			ld 		a, enemy_x(iy)
+			ld 		enemy_SX(iy), a
+			call 	eraseEnemyMark
 		jumpNextEnemyUpdate:
-			ld 		a, enemy_last(ix)
+			ld 		a, enemy_last(iy)
 			cp 		#1
 			ret 	z
-				ld 		bc, #7
-				add 	ix, bc
+				ld 		bc, #9
+				add 	iy, bc
 				jr 		updateEnemyBucle
 checkEnemy::
 	ld 		a, (enemyTime)
@@ -127,6 +154,8 @@ checkEnemy::
 			ld 		enemy_x(ix), a
 			ld 		a, (enemyHigh)
 			ld 		enemy_y(ix), a
+			;NECESARIO?¿
+			ld 		enemy_SY(ix), a
 			ld 		a, #40
 			ld 		(enemyTime), a
 			jr 		quitCheckEnemy
@@ -134,7 +163,7 @@ checkEnemy::
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			jr 		z, forceRestart
-				ld 		bc, #7
+				ld 		bc, #9
 				add 	ix, bc
 				jr 		activateBucle
 		forceRestart:
@@ -157,4 +186,40 @@ checkTimer::
 	
 	quitTimer:
 	ld 		(enemyHigh), a
+	ret
+checkAnimationTimer::
+	ld 		a, (enemyAnimationTimer)
+	inc 	a
+	cp 		#5
+	jr 		nz, quitAnimationTimer
+		ld 		a, (enemyAnimation)
+		inc 	a
+		ld 		(enemyAnimation), a
+		ld 		a, #0
+	quitAnimationTimer:
+		ld 		(enemyAnimationTimer), a
+	ret
+
+eraseEnemyMark::
+		ld 		a, (buffer_start)
+		cp 		#0xC0
+		jr 		z, erase80
+			ld 		d, #0xC0
+			jr 		continueEraseMark
+		erase80:
+		ld 		d, #0x80
+		continueEraseMark:
+		ld 		e, #0x00
+		ld 		c, enemy_SX(iy)
+		ld 		b, enemy_y(iy)
+
+		call 	cpct_getScreenPtr_asm
+
+		ex 		de, hl
+
+		ld 		b, enemy_h(iy)
+		ld 		c, enemy_w(iy)
+
+		ld 		a, #0x00
+		call 	cpct_drawSolidBox_asm
 	ret
