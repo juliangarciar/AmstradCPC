@@ -12,13 +12,6 @@
 
 defineHero 	hero, 10, 100, 8, 16
 
-;==================
-;	Jump Table
-;==================
-;jumptable::	.db	#-20, #-18, #-16, #-5, #-4, #-3, #-2		;datos para rellenar la tabla
-;			.db #-1, #00, #00, #00
-;			.db	#0x80 					;para marcar el final
-
 .area _CODE
 	;==================
 	; 	HERO_CODE
@@ -118,32 +111,3 @@ gameOver:
 	ld 		hl, (#0x004)
 	jp 		(hl)
 	ret
-;==================
-;   GRAVEDAD
-; 	
-;==================	
-;updateHero::
-;		call 	heroPtr
-;		inc 	hero_y(ix)
-;		inc 	hero_special_y(ix)
-;
-;			call 	jumpCollision
-;			cp 		#1
-;			;COLISIONA
-;			jr 		z, end
-;
-;				inc 	hero_y(ix)
-;				inc 	hero_special_y(ix)
-;
-;				call 	jumpCollision
-;				cp 		#1
-;
-;				jr 		z, end
-;		
-;				ret
-;	end:
-;		;REINICIAR SALTO
-;		;ld 		hero_j(ix), #-1
-;		dec 	hero_y(ix)
-;		dec 	hero_special_y(ix)
-;	ret

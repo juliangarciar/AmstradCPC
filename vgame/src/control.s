@@ -7,6 +7,7 @@
 .include "hero.h.s"
 .include "shot.h.s"
 .include "keyboard/keyboard.s"
+.include "bomb.h.s"
 
 shotTime: .db #8
 
@@ -132,6 +133,14 @@ checkUserInput::
 			ld 		(shotTime), a
 
 	shotNotPressed:
+	ld 		hl, #Key_L
+	call 	cpct_isKeyPressed_asm
+	cp 		#0
+	jr 		z, nothingPressed
+
+			;Else move down
+			call 	useBomb
+	nothingPressed:
 		ret
 
 	checkShotTime::

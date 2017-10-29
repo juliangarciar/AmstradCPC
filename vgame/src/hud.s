@@ -151,61 +151,8 @@ initHUD::
 		call 	cpct_drawCharM0_asm
 		;END DRAW
 		;DRAW NUMBERS
-		ld 		de, #0x8000
-		ld 		a, #16
-		ld 		c, a
-		ld 		a, #200-24			
-		ld 		b, a
-		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register
-		ex 		de, hl 
-		ld 		a, (characterColor)
-		ld 		c, a
-		ld 		a, (backgroundColor)
-		ld 		b, a
-		ld 		a, #51
-		call 	cpct_drawCharM0_asm
-
-		ld 		de, #0xC000
-		ld 		a, #16
-		ld 		c, a
-		ld 		a, #200-24			
-		ld 		b, a
-		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register
-		ex 		de, hl 
-		ld 		a, (characterColor)
-		ld 		c, a
-		ld 		a, (backgroundColor)
-		ld 		b, a
-		ld 		a, #51
-		call 	cpct_drawCharM0_asm
-
-		ld 		de, #0x8000
-		ld 		a, #34
-		ld 		c, a
-		ld 		a, #200-24			
-		ld 		b, a
-		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register
-		ex 		de, hl 
-		ld 		a, (characterColor)
-		ld 		c, a
-		ld 		a, (backgroundColor)
-		ld 		b, a
-		ld 		a, #49
-		call 	cpct_drawCharM0_asm
-
-		ld 		de, #0xC000
-		ld 		a, #34
-		ld 		c, a
-		ld 		a, #200-24			
-		ld 		b, a
-		call 	cpct_getScreenPtr_asm	;gets pointer in HL with the data passed on the register
-		ex 		de, hl 
-		ld 		a, (characterColor)
-		ld 		c, a
-		ld 		a, (backgroundColor)
-		ld 		b, a
-		ld 		a, #49
-		call 	cpct_drawCharM0_asm
+		call 	updateLifes
+		call 	updateBomb
 		;END
 	ret
 
@@ -277,19 +224,19 @@ updateBomb::
 					jr 		z, draw3B
 		draw3B:
 			ld 		a, #51
-			ld 		(lifes), a
+			ld 		(bombs), a
 			jr 		continueUpdateBombs
 		draw2B:
 			ld 		a, #50
-			ld 		(lifes), a
+			ld 		(bombs), a
 			jr 		continueUpdateBombs
 		draw1B:
 			ld 		a, #49
-			ld 		(lifes), a
+			ld 		(bombs), a
 			jr 		continueUpdateBombs
 		draw0B:
 			ld 		a, #48
-			ld 		(lifes), a
+			ld 		(bombs), a
 		continueUpdateBombs:
 		ld 		de, #0x8000
 		ld 		a, #34
@@ -302,7 +249,7 @@ updateBomb::
 		ld 		c, a
 		ld 		a, (backgroundColor)
 		ld 		b, a
-		ld 		a, (lifes)
+		ld 		a, (bombs)
 		call 	cpct_drawCharM0_asm
 
 		ld 		de, #0xC000
@@ -316,7 +263,7 @@ updateBomb::
 		ld 		c, a
 		ld 		a, (backgroundColor)
 		ld 		b, a
-		ld 		a, (lifes)
+		ld 		a, (bombs)
 		call 	cpct_drawCharM0_asm
 	ret
 updateScore::
