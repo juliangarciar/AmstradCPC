@@ -5,9 +5,6 @@
 .include "collision.h.s"
 .include "buffer.h.s"
 
-.globl	_sprite_hero1
-.globl	_sprite_hero2
-
 defineShot shot , 3, 5, 0
 defineShot shot2, 3, 5, 0
 defineShot shot3, 3, 5, 0

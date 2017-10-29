@@ -68,23 +68,9 @@ PALETTE={0 1 2 3 4 6 7 8 9 11 12 13 15 20 24 26}
 ##	  hardware colour values.
 ## $(eval $(call IMG2SPRITES,assets/hero.png,0,sprite,32,32,$(PALETTE),mask,src/,hwpalette))
 #$(eval $(call IMG2SPRITES,assets/hero.png,0,sprite,32,32,$(PALETTE),,src/sprites,hwpalette))
-$(eval $(call IMG2SPRITES,assets/hero1.png,0,sprite,8,16,$(PALETTE),,src/sprites,hwpalette))
-$(eval $(call IMG2SPRITES,assets/hero2.png,0,sprite,8,16,$(PALETTE),,src/sprites,))
-$(eval $(call IMG2SPRITES,assets/hero3.png,0,sprite,8,16,$(PALETTE),,src/sprites,))
 
-##$(eval $(call IMG2SPRITES,assets/shot1.png,0,sprite,4,3,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/shot2.png,0,sprite,4,3,$(PALETTE),,src/sprites,))
-##
-##$(eval $(call IMG2SPRITES,assets/fire1.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/fire2.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/red1.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/red2.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
-##
-##$(eval $(call IMG2SPRITES,assets/blue.png,0,sprite,8,8,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/mierda.png,0,sprite,14,16,$(PALETTE),,src/sprites,))
-##$(eval $(call IMG2SPRITES,assets/astro.png,0,sprite,28,42,$(PALETTE),,src/sprites,))
 
-$(eval $(call IMG2SPRITES,assets/def1.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/def1.png,0,sprite,6,5,$(PALETTE),,src/sprites,hwpalette))
 $(eval $(call IMG2SPRITES,assets/def2.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/def3.png,0,sprite,6,5,$(PALETTE),,src/sprites,))
 
@@ -95,5 +81,7 @@ $(eval $(call IMG2SPRITES,assets/enemy34.png,0,sprite,16,16,$(PALETTE),,src/spri
 
 $(eval $(call IMG2SPRITES,assets/hero11.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/hero12.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+
+$(eval $(call IMG2SPRITES,assets/bomb.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 
 $(eval $(call IMG2SPRITES,assets/tileset32x32.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))

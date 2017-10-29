@@ -2,4 +2,3 @@
 .globl toggleVideoMemory
 
 .globl buffer_start
-;.globl setBorder

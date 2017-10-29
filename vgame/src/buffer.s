@@ -7,12 +7,6 @@ initializeVideoMemory::
     ld (hl), #00
     ld bc, #0x4000
     ldir
-
-    ld hl, #0xC000
-    ld de, #0xC001
-    ld (hl), #00
-    ld bc, #0x4000
-    ldir
 ret
 
 toggleVideoMemory::
@@ -31,8 +25,3 @@ ret
         ld l, #0x20
         call cpct_setVideoMemoryPage_asm
 ret
-
-;setBorder:
-;    ld l, #17
-;    call cpct_setPALColour_asm
-;ret

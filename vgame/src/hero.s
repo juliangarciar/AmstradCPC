@@ -7,8 +7,8 @@
 .include "collision.h.s"
 .include "buffer.h.s"
 .include "control.h.s"
-.globl	_sprite_hero11
-.globl	_sprite_hero12
+.include "hero.h.s"
+.include "hud.h.s"
 
 defineHero 	hero, 10, 100, 8, 16
 
@@ -85,6 +85,14 @@ eraseHero::
 updateHero::
 		ld 		ix, #hero_data
 		call 	checkCollision
+		cp 		#0
+		jr 		z, continueUpdateHero
+			ld 		a, hero_lives(ix)
+			cp 		#0
+			jr 		z, gameOver
+			dec 	hero_lives(ix)
+			call 	updateLifes
+		continueUpdateHero:
 		ld 		a, hero_sprite(ix)
 		cp 		#1
 		jr 		z, swapHeroSprite
@@ -106,6 +114,10 @@ heroPtrY::
 		ld 		iy, #hero_data
 	ret
 
+gameOver:
+	ld 		hl, (#0x004)
+	jp 		(hl)
+	ret
 ;==================
 ;   GRAVEDAD
 ; 	

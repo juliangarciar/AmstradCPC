@@ -17,6 +17,8 @@
 		name'Spr: 	.db #0
 		name'SX: 	.db x
 		name'SY: 	.db y
+		name'Lives: .db #3
+		name'Bombs: .db #1
 .endm
 	.equ	hero_x, 0
 	.equ	hero_y, 1
@@ -25,6 +27,8 @@
 	.equ 	hero_sprite, 4
 	.equ 	hero_SX, 5
 	.equ 	hero_SY, 6
+	.equ 	hero_lives, 7
+	.equ 	hero_bombs, 8
 ;==========================================
 ; 	SHOT CREATION
 ;
@@ -70,14 +74,6 @@
 ;			== 0 -> YES
 ; 	*name -> define a name for this entity
 ;==========================================
-;.macro defineObs name, x, y, w, h, l
-;	name'_data:
-;		name'X: 	.db x
-;		name'Y: 	.db y
-;		name'W: 	.db w
-;		name'H: 	.db h
-;		name'L:		.db l
-;.endm
 	.equ	obs_x, 0
 	.equ	obs_y, 1
 	.equ	obs_w, 2
@@ -118,7 +114,6 @@
 		name'SY: 	.db #0
 		
 .endm
-;MODIFICAR
 	.equ	enemy_x, 0
 	.equ	enemy_y, 1
 	.equ	enemy_w, 2
@@ -128,28 +123,7 @@
 	.equ 	enemy_last, 6
 	.equ 	enemy_SX, 7
 	.equ 	enemy_SY, 8
-	
-;==========================================
-; 	SPRITE HERO
-;
-;	VARIABLES:
-;		x -> OX
-;		y -> OY
-;		w -> WIDTH
-;		h -> HEIGHT
-; 	*name -> define a name for this entity
-;==========================================
-;.macro defineSprite name
-;	name'_data:
-;		name'_sprite_normal:	.dw _sprite_hero1
-;		name'_sprite_right:		.dw _sprite_hero2
-;		name'_sprite_left:		.dw _sprite_hero3
-;		name'_pos: 				.db #0
-;.endm
-;	.equ	sprite_1, 0
-;	.equ	sprite_2, 1
-;	.equ	sprite_3, 2
-;	.equ 	sprite_pos, 3
+
 ;=========================================
 ; 	USEFULL MACROS
 ;=========================================

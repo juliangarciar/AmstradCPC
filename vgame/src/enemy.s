@@ -180,7 +180,7 @@ enemyPtrY::
 checkTimer::
 	ld 		a, (enemyHigh)
 	inc 	a
-	cp 		#180
+	cp 		#200-64
 	jr 		nz, quitTimer
 		ld 		a, #13
 	

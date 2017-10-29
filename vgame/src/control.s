@@ -54,7 +54,7 @@ moveHeroDown:
 	call 	heroPtrX
 
 	ld 		a, hero_y(ix)
-	cp 		#180			;Bottom limit
+	cp 		#200-64			;Bottom limit
 	ret 	z				;hero_x = limite pantalla izda
 
 		add 	a, #4

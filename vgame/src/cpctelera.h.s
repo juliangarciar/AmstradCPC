@@ -29,3 +29,18 @@
 .globl cpct_setInterruptHandler_asm
 .globl cpct_scanKeyboard_if_asm
 .globl cpct_setVideoMemoryPage_asm
+;===============================================================================
+; DRAW CHAR:
+;
+;(2B DE) video_memory	Video memory location where the character will be drawn
+;(1B C ) fg_pen	Foreground palette colour index (Similar to BASIC’s PEN, 0-15)
+;(1B B ) bg_pen	Background palette colour index (PEN, 0-15)
+;(1B A ) ascii	Character to be drawn (ASCII code)
+;===============================================================================
+.globl cpct_drawCharM0_asm
+;============================
+; MUSIC CALLS
+;============================
+.globl cpct_akp_musicPlay_asm
+.globl cpct_akp_musicInit_asm
+.globl cpct_akp_stop_asm
