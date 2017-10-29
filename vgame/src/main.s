@@ -7,6 +7,7 @@
 .include "hero.h.s"
 .include "shot.h.s"
 .include "enemy.h.s"
+.include "map.h.s"
 .include "buffer.h.s"
 
 .globl 	_sprite_palette
@@ -82,6 +83,11 @@
 		ld 		hl, #isr
 		call 	cpct_setInterruptHandler_asm
 		call 	initializeVideoMemory
+
+		call drawMap1 ;; COOO
+
+		call drawMap2 ;; 8000
+
 			main_bucle:
 			
 			call 	eraseEnemy

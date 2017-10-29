@@ -10,7 +10,7 @@
 .globl	_sprite_hero11
 .globl	_sprite_hero12
 
-defineHero 	hero, 0, 160, 8, 16
+defineHero 	hero, 10, 100, 8, 16
 
 ;==================
 ;	Jump Table

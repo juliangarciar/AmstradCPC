@@ -96,4 +96,4 @@ $(eval $(call IMG2SPRITES,assets/enemy34.png,0,sprite,16,16,$(PALETTE),,src/spri
 $(eval $(call IMG2SPRITES,assets/hero11.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/hero12.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 
-#$(eval $(call IMG2SPRITES,assets/paleta_mapa.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/tileset32x32.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))
