@@ -12,15 +12,16 @@
 .include "hud.h.s"
 
 .globl 	_sprite_palette
+.globl _song_ingame
 
-unavariable: .db #0x12
+unavariable: .db #12
 
 .area _CODE
 ;========================
 ; 	INTERRUPTS
 ;
 ;========================
-	isr:
+	isr:   
 		ld 		a, (unavariable)
 		dec 	a
 		ld 		(unavariable), a
@@ -34,7 +35,7 @@ unavariable: .db #0x12
 		push 	hl
 		push 	iy
 		
-			;call 	cpct_akp_musicPlay_asm
+			call 	cpct_akp_musicPlay_asm
 			ld 		a, #12
 			ld 		(unavariable), a
 		
@@ -64,6 +65,9 @@ unavariable: .db #0x12
 		ld 		hl, #_sprite_palette
 		ld 		de, #16
 		call 	cpct_setPalette_asm
+
+		ld 		de, #_song_ingame
+		call cpct_akp_musicInit_asm
 
 	ret
 ;========================
