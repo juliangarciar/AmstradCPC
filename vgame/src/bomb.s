@@ -13,23 +13,7 @@ useBomb::
 	ret 	z
 		dec 	hero_bombs(ix)
 		call 	updateBomb
-		call 	enemyPtrY
-	bombBucle:
-	ld 		a, enemy_alive(iy)
-	cp 		#0
-	jr 		z, nextEnemy
-		
-		ld 		a, #0
-		ld 		enemy_alive(iy), a
-		call 	eraseEnemyMark
-		
-	nextEnemy:
-		ld 		a, obs_l(iy)
-		cp 		#1
-		jr 		nz, repeatBomb
+		call 	killAll
+		jr 		bombAnimation
+bombAnimation:
 	ret
-
-	repeatBomb:
-		ld 		bc, #9
-		add 	iy, bc
-		jr		bombBucle

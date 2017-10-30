@@ -80,11 +80,11 @@ updateHero::
 		call 	checkCollision
 		cp 		#0
 		jr 		z, continueUpdateHero
-			ld 		a, hero_lives(ix)
-			cp 		#0
-			jr 		z, gameOver
-			dec 	hero_lives(ix)
-			call 	updateLifes
+			;ld 		a, hero_lives(ix)
+			;cp 		#0
+			;jr 		z, gameOver
+			;dec 	hero_lives(ix)
+			;call 	updateLifes
 		continueUpdateHero:
 		ld 		a, hero_sprite(ix)
 		cp 		#1

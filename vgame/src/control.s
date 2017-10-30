@@ -9,8 +9,7 @@
 .include "keyboard/keyboard.s"
 .include "bomb.h.s"
 
-shotTime: .db #8
-
+shotTime: .db #6
 .area _CODE
 	;==================
 	; CONTROL CODE
@@ -32,7 +31,7 @@ moveHeroLeft:
 	call 	heroPtrX
 
 	ld 		a, hero_x(ix)
-	cp 		#8				;Left limit
+	cp 		#0				;Left limit
 	ret 	z				;hero_x = limite pantalla izda
 
 		dec 	hero_x(ix)	
@@ -43,7 +42,7 @@ moveHeroUp:
 	call 	heroPtrX
 
 	ld 		a, hero_y(ix)
-	cp 		#20				;Upper limit
+	cp 		#0				;Upper limit
 	ret 	z				;hero_x = limite pantalla izda
 
 		add 	a, #-4
@@ -129,7 +128,7 @@ checkUserInput::
 			cp 		#0
 			jr 		nz, shotNotPressed
 			call 	checkShot
-			ld 		a, #8
+			ld 		a, #6
 			ld 		(shotTime), a
 
 	shotNotPressed:

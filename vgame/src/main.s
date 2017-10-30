@@ -21,6 +21,11 @@ unavariable: .db #0x12
 ;
 ;========================
 	isr:
+		ld 		a, (unavariable)
+		dec 	a
+		ld 		(unavariable), a
+		jr 		nz, return
+
 		ex 		af, af'
 		exx
 		push 	af
@@ -28,16 +33,10 @@ unavariable: .db #0x12
 		push 	de
 		push 	hl
 		push 	iy
-
-		ld 		a, (unavariable)
-		dec 	a
-		ld 		(unavariable), a
-		jr 		nz, return
+		
 			;call 	cpct_akp_musicPlay_asm
 			ld 		a, #12
 			ld 		(unavariable), a
-		return:
-		
 		
 		pop 	iy
 		pop 	hl
@@ -47,7 +46,11 @@ unavariable: .db #0x12
 		exx
 		ex 		af, af'
 		call 	cpct_scanKeyboard_if_asm
-				
+		call 	checkTimer
+		call 	checkShotTime
+		call 	checkEnemy
+		return:
+		
 	ret
 ;========================
 ; 	INIT THE GAME
@@ -61,8 +64,19 @@ unavariable: .db #0x12
 		ld 		hl, #_sprite_palette
 		ld 		de, #16
 		call 	cpct_setPalette_asm
-	ret
 
+	ret
+;========================
+; 	INIT THE GAME
+;
+;========================
+	waitLoad:
+		ld 		a, #255
+		waitBucle:
+		dec 	a
+		cp 		#0
+		jr 		nz, waitBucle
+	 	ret
 ;========================
 ; 	MAIN PROGRAM
 ;
@@ -90,7 +104,7 @@ unavariable: .db #0x12
 		call 	drawMap1 ;; COOO
 		call 	drawMap2 ;; 8000
 		call 	initHUD
-
+		call 	waitLoad
 			main_bucle:
 			;=============
 			; ERASE 
@@ -103,11 +117,8 @@ unavariable: .db #0x12
 			;=============
 			; CHECKS
 			;=============
-			call 	checkTimer
-			;call 	checkAnimationTimer
-			call 	checkShotTime
-			call 	checkEnemy
 			
+
 			;=============
 			; UPDATE 
 			;=============

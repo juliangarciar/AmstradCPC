@@ -3,28 +3,33 @@
 .include "cpctelera.h.s"
 .include "buffer.h.s"
 
-defineEnemy enemy , 8, 16, 0
-defineEnemy enemy2, 8, 16, 0
-defineEnemy enemy3, 8, 16, 0
-defineEnemy enemy4, 8, 16, 1
+defineEnemy enemy , 8, 16, 0, 2
+defineEnemy enemy2, 8, 16, 0, 1
+defineEnemy enemy3, 8, 16, 0, 2
+defineEnemy enemy4, 8, 16, 0, 1
+defineEnemy enemy5, 8, 16, 1, 2
+defineEnemy enemy6, 8, 16, 0, 1
 
-enemyTime: .db #40
-enemyHigh: .db #13
-enemyAnimation: .db #0
-enemyAnimationTimer: .db #0
+enemyTime: .db #10
+enemyHigh: .db #0
 
 .globl _sprite_enemy31
 .globl _sprite_enemy32
 .globl _sprite_enemy33
 .globl _sprite_enemy34
 
+.globl _sprite_enemy21
+.globl _sprite_enemy22
+.globl _sprite_enemy23
+.globl _sprite_enemy24
+
 .area _CODE
 drawEnemy::
 	ld 		ix, #enemy_data
 	drawEnemyBucle:
-		ld 		a, enemy_alive(ix) 			;Check if the shot is alive
+		ld 		a, enemy_alive(ix) 			
 		cp 		#0
-		jr		z, jumpNextEnemyDraw
+		jp		z, jumpNextEnemyDraw
 			ld 		a, (buffer_start)
 			ld 		d, a
 			ld 		e, #0x00
@@ -33,7 +38,7 @@ drawEnemy::
 			call 	cpct_getScreenPtr_asm
 
 			ex 		de, hl
-			;ld 		a, (enemyAnimation)
+
 			ld 		a, enemy_sprite(ix)
 			cp 		#0
 			jr 		z, Enemy1Draw
@@ -46,19 +51,49 @@ drawEnemy::
 							cp 		#4
 							jr 		z, Enemy5Draw
 			Enemy1Draw:
-				ld 		hl, #_sprite_enemy31
-				jp 		continueEnemyDraw
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw1Type1
+					ld 		hl, #_sprite_enemy31
+					jr 		continueEnemyDraw
+				Draw1Type1:
+				ld 		hl, #_sprite_enemy21
+				jr 		continueEnemyDraw
 			Enemy2Draw:
-				ld 		hl, #_sprite_enemy32
-				jp 		continueEnemyDraw
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw2Type1
+					ld 		hl, #_sprite_enemy32
+					jr 		continueEnemyDraw
+				Draw2Type1:
+				ld 		hl, #_sprite_enemy22
+				jr 		continueEnemyDraw
 			Enemy3Draw:
-				ld 		hl, #_sprite_enemy33
-				jp 		continueEnemyDraw
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw3Type1
+					ld 		hl, #_sprite_enemy33
+					jr 		continueEnemyDraw
+				Draw3Type1:
+				ld 		hl, #_sprite_enemy23
+				jr 		continueEnemyDraw
 			Enemy4Draw:
-				ld 		hl, #_sprite_enemy32
-				jp 		continueEnemyDraw
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw4Type1
+					ld 		hl, #_sprite_enemy32
+					jr 		continueEnemyDraw
+				Draw4Type1:
+				ld 		hl, #_sprite_enemy22
+				jr 		continueEnemyDraw
 			Enemy5Draw:
-				ld 		hl, #_sprite_enemy34
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw5Type1
+					ld 		hl, #_sprite_enemy34
+					jr 		continueEnemyDraw
+				Draw5Type1:
+				ld 		hl, #_sprite_enemy24
 			continueEnemyDraw:
 				ld 		b, enemy_h(ix)
 				ld 		c, enemy_w(ix)
@@ -68,13 +103,13 @@ drawEnemy::
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #11
 				add 	ix, bc
-				jr 		drawEnemyBucle
+				jp 		drawEnemyBucle
 eraseEnemy::
 	ld 		ix, #enemy_data
 	eraseEnemyBucle:
-		ld 		a, enemy_alive(ix) 			;Check if the shot is alive
+		ld 		a, enemy_alive(ix) 			
 		cp 		#0
 		jr		z, jumpNextEnemyErase
 			ld 		a, (buffer_start)
@@ -96,21 +131,32 @@ eraseEnemy::
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #11
 				add 	ix, bc
 				jr 		eraseEnemyBucle
 updateEnemy::
 	ld 		iy, #enemy_data
 	updateEnemyBucle:
-		ld 		a, enemy_alive(iy)
-		cp 		#0
-		jr 		z, jumpNextEnemyUpdate
-			;Haz cosas
-			ld 		a, enemy_x(iy)
-			cp 		#4
-			jr 		z, destroyEnemy
+		ld 		a, enemy_alive(iy)			;Check if the enemy is alive
+		cp 		#0							;if(yes) then continue update
+		jr 		z, jumpNextEnemyUpdate		;else load next enemy
 
-				ld 		enemy_SX(iy), a
+			ld 		a, enemy_x(iy)			;Check if the enemy is on the limit screen
+			cp 		#4						;if(yes) then continue update
+			jp 		m, destroyEnemy			;else detroy it
+
+			ld 		a, enemy_x(iy)
+			ld 		enemy_SX(iy), a
+
+			ld 		a, enemy_timer(iy) 		;Check if the enemy timer is active
+			cp 		#0  					;if(yes) then continue update
+			jr 		z, updateContinue 		;else load next enemy
+				dec 	enemy_timer(iy)
+				jr 		jumpNextEnemyUpdate
+			updateContinue:
+				inc 	enemy_timer(iy)
+			
+				
 				dec 	enemy_x(iy)
 				;jr 		jumpNextEnemyUpdate
 				ld 		a, enemy_sprite(iy)
@@ -132,7 +178,7 @@ updateEnemy::
 			ld 		a, enemy_last(iy)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #11
 				add 	iy, bc
 				jr 		updateEnemyBucle
 checkEnemy::
@@ -146,9 +192,9 @@ checkEnemy::
 		ld 		ix, #enemy_data
 		activateBucle:
 		ld 		a, enemy_alive(ix)
-		cp 		#1
-		jr 		z, jumpNextEnemyCheck
-			ld 		a, #1
+		cp 		#0
+		jr 		nz, jumpNextEnemyCheck
+			ld 		a, enemy_max(ix)
 			ld 		enemy_alive(ix), a
 			ld 		a, #72
 			ld 		enemy_x(ix), a
@@ -156,18 +202,18 @@ checkEnemy::
 			ld 		enemy_y(ix), a
 			;NECESARIO?¿
 			ld 		enemy_SY(ix), a
-			ld 		a, #40
+			ld 		a, #10
 			ld 		(enemyTime), a
 			jr 		quitCheckEnemy
 		jumpNextEnemyCheck:
 			ld 		a, enemy_last(ix)
 			cp 		#1
 			jr 		z, forceRestart
-				ld 		bc, #9
+				ld 		bc, #11
 				add 	ix, bc
 				jr 		activateBucle
 		forceRestart:
-			ld 		a, #40
+			ld 		a, #33
 			ld 		(enemyTime), a
 	quitCheckEnemy:
 	ret
@@ -178,26 +224,16 @@ enemyPtrY::
 	ld 		iy, #enemy_data
 	ret
 checkTimer::
+	ld 		a, #4
+	ld 		b, a
 	ld 		a, (enemyHigh)
-	inc 	a
+	add 	a, b
 	cp 		#200-64
 	jr 		nz, quitTimer
-		ld 		a, #13
-	
+
+		ld 		a, #0
 	quitTimer:
 	ld 		(enemyHigh), a
-	ret
-checkAnimationTimer::
-	ld 		a, (enemyAnimationTimer)
-	inc 	a
-	cp 		#5
-	jr 		nz, quitAnimationTimer
-		ld 		a, (enemyAnimation)
-		inc 	a
-		ld 		(enemyAnimation), a
-		ld 		a, #0
-	quitAnimationTimer:
-		ld 		(enemyAnimationTimer), a
 	ret
 
 eraseEnemyMark::
@@ -222,4 +258,29 @@ eraseEnemyMark::
 
 		ld 		a, #0x00
 		call 	cpct_drawSolidBox_asm
+	ret
+
+killAll::
+	call 	enemyPtrY
+	killBucle:
+	ld 		a, enemy_alive(iy)
+	cp 		#0
+	jr 		z, nextEnemyKill
+		
+		ld 		a, #0
+		ld 		enemy_alive(iy), a
+		call 	eraseEnemyMark
+		
+	nextEnemyKill:
+		ld 		a, obs_l(iy)
+		cp 		#1
+		jr 		nz, repeatKill
+		ld 		a, #80
+		ld 		(enemyTime), a
+	ret
+
+	repeatKill:
+		ld 		bc, #11
+		add 	iy, bc
+		jr		killBucle
 	ret

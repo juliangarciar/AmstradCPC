@@ -89,7 +89,11 @@ collisionBucle:
 						;ld 		a, #0
 						;ld 		obs_alive(iy), a
 						dec 	obs_alive(iy)
-						call 	eraseEnemyMark
+						ld 		a, obs_alive(iy)
+						cp 		#0
+						jr 		nz, notErase
+							call 	eraseEnemyMark
+						notErase:
 						ld 		a, #1
 					ret
 	;EN CASO DE NO COLISIONAR
@@ -105,7 +109,7 @@ collisionBucle:
 		ret
 	;REPITE EL BUCLE SI HAY MAS OBJETOS
 	repeat:
-		ld 		bc, #9
+		ld 		bc, #11
 		add 	iy, bc
 		jr		collisionBucle
 	

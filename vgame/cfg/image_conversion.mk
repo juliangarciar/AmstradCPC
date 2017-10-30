@@ -79,6 +79,11 @@ $(eval $(call IMG2SPRITES,assets/enemy32.png,0,sprite,16,16,$(PALETTE),,src/spri
 $(eval $(call IMG2SPRITES,assets/enemy33.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/enemy34.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 
+$(eval $(call IMG2SPRITES,assets/enemy21.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy22.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy23.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/enemy24.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+
 $(eval $(call IMG2SPRITES,assets/hero11.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/hero12.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 

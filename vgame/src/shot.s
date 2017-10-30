@@ -56,7 +56,7 @@ drawShot::
 			ld 		a, shot_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #10
 				add 	ix, bc
 				jr 		drawShotBucle
 		ret
@@ -85,29 +85,41 @@ eraseShot::
 			ld 		a, shot_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #10
 				add 	ix, bc
 				jr 		eraseShotBucle
 		ret
 updateShot::
 	ld 		ix, #shot_data
 	updateShotBucle:
-		ld 		a, shot_alive(ix)
-		cp 		#0
-		jr 		z, jumpNextShotUpdate
-			;Haz cosas
-			ld 		a, shot_x(ix)
-			cp 		#80-4
-			jr 		z, destroyShot
-			cp 		#80-3
-			jr 		z, destroyShot
+		ld 		a, shot_alive(ix) 			;Check if the shot is alive
+		cp 		#0							;if(yes) then continue update
+		jr 		z, jumpNextShotUpdate 		;else load next shot
 
-			call 	checkCollision		;Check collisions
-			cp 		#1					;
-			jr 		z, destroyShot		;
+			ld 		a, shot_x(ix) 			;Load shot position in X
+			cp 		#80-5 					;check if the shot is in the screen limit
+			jr 		z, destroyShot 			;if(yes) then destroy it
+			cp 		#80-4 					;
+			jr 		z, destroyShot 			;else continue update
+			cp 		#80-3 					;^
+			jr 		z, destroyShot 			;^
 
-				ld 		a, shot_x(ix)
-				ld 		shot_SX(ix), a
+ 			call 	checkCollision			;Check if the shot collides with an enemy
+			cp 		#1						;if(yes) then destroy the shot
+			jr 		z, destroyShot			;else continue update 
+
+			ld 		a, shot_x(ix) 			;Update last position
+			ld 		shot_SX(ix), a 			;^
+
+			ld 		a, shot_timer(ix) 		;Check if the timer is active
+			cp 		#0 						;if(yes) then continue update 
+			jr 		z, continueUpdateShot 	;else load next shot
+ 											
+				dec 	shot_timer(ix) 		;Update shot timer
+				jr 		jumpNextShotUpdate  ;load next shot
+			continueUpdateShot:
+				inc 	shot_timer(ix)
+				inc 	shot_x(ix)
 				inc 	shot_x(ix)
 				inc 	shot_x(ix)
 				ld 		a, shot_sprite(ix)
@@ -130,7 +142,7 @@ updateShot::
 			ld 		a, shot_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #10
 				add 	ix, bc
 				jr 		updateShotBucle
 		ret
@@ -158,7 +170,7 @@ checkShot::
 			ld 		a, shot_last(ix)
 			cp 		#1
 			ret 	z
-				ld 		bc, #9
+				ld 		bc, #10
 				add 	ix, bc
 				jr 		checkShotBucle
 	ret

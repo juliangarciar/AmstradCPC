@@ -51,6 +51,7 @@
 		name'Last: 	.db l
 		name'SX: 	.db #0
 		name'SY: 	.db #0
+		name'Timer: .db #0
 .endm
 	.equ	shot_x, 0
 	.equ	shot_y, 1
@@ -61,6 +62,7 @@
 	.equ 	shot_last, 6
 	.equ 	shot_SX, 7
 	.equ 	shot_SY, 8
+	.equ 	shot_timer, 9
 ;==========================================
 ; 	OBSTACLE CREATION
 ;
@@ -101,7 +103,7 @@
 ;			== 0 -> YES
 ; 	*name -> define a name for this entity
 ;==========================================
-.macro defineEnemy name, w, h, l
+.macro defineEnemy name, w, h, l, m
 	name'_data:
 		name'X: 	.db #0
 		name'Y: 	.db #0
@@ -112,7 +114,8 @@
 		name'Last: 	.db l
 		name'SX: 	.db #0
 		name'SY: 	.db #0
-		
+		name'Max: 	.db m
+		name'Timer: .db #1
 .endm
 	.equ	enemy_x, 0
 	.equ	enemy_y, 1
@@ -123,6 +126,8 @@
 	.equ 	enemy_last, 6
 	.equ 	enemy_SX, 7
 	.equ 	enemy_SY, 8
+	.equ 	enemy_max, 9
+	.equ 	enemy_timer, 10
 
 ;=========================================
 ; 	USEFULL MACROS
