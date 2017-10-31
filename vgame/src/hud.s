@@ -245,6 +245,9 @@ updateLifes::
 		jp 		z, 	gameOver
 			;jp 	gameOver
 		continueUpdateLifes:
+		ld 		a, #48
+		ld 		b, a
+		ld  	a, hero_lives(ix)
 		add 	a, b
 		ld 		(lifes), a
 		ld 		de, #0x8000
@@ -415,7 +418,8 @@ gameOver:
 
 		call 	cpct_drawSprite_asm 
 
-
-	infinite:
-	jr 	infinite
-	;call 	startGame
+		ld 		a, #3
+		ld 		(gameMode), a
+		infinite:
+		jr 		infinite
+ret

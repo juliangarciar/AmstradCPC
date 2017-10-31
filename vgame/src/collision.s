@@ -127,13 +127,12 @@ collisionBucle:
 								ld 		a, obs_alive(iy)
 								cp 		#0
 								jr 		nz, quitCollision
+									
+									call 	eraseShotMark
 									call 	eraseBossMark
+
 									call 	swapGameMode
-									call 	heroPtrY
-									inc 	hero_bombs(iy)
-									inc 	hero_lives(iy)
-									;call 	updateLifes
-									;call 	updateBomb
+
 									jr 		quitCollision
 							mode0:	
 								dec 	obs_alive(iy)

@@ -103,3 +103,18 @@ heroPtrX::
 heroPtrY::
 		ld 		iy, #hero_data
 	ret
+initHero::
+		ld 		ix, #hero_data
+		ld 		a, #10
+		ld 		hero_x(ix), a
+		ld 		hero_SX(ix), a
+		ld 		a, #100
+		ld 		hero_y(ix), a
+		ld 		hero_SY(ix), a
+		ld 		a, #9
+		ld 		hero_lives(ix), a
+		ld 		a, #3
+		ld 		hero_bombs(ix), a
+		ld 		a, #0
+		ld 		hero_sprite(ix), a
+	ret

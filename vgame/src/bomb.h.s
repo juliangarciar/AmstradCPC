@@ -1,1 +1,2 @@
 .globl useBomb
+.globl checkBomb

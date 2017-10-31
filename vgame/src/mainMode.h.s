@@ -2,4 +2,4 @@
 .globl totalKills
 .globl totalLeaks
 .globl swapGameMode
-.globl startGame
+.globl restartGame

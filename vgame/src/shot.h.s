@@ -6,3 +6,4 @@
 .globl eraseShotMark
 .globl updateShot
 .globl swapShotMode
+.globl initShots

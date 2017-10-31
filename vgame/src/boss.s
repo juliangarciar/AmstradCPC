@@ -3,7 +3,6 @@
 .include "cpctelera.h.s"
 .include "buffer.h.s"
 .include "mainMode.h.s"
-
 defineBoss boss 62, 50, 16, 32, 1
 
 .globl _sprite_boss1
@@ -12,7 +11,7 @@ defineBoss boss 62, 50, 16, 32, 1
 boss_life:  		 .db #50
 boss_mov: 			 .db #0
 boss_time_animation: .db #5
-boss_time_action:	 .db #10
+boss_time_action:	 .db #25
 action: 			 .db #0
 .area _CODE
 drawBoss::
@@ -67,34 +66,63 @@ updateBoss::
 	ld 		boss_SX(ix), a
 	ld 		a, boss_y(ix)
 	ld 		boss_SY(ix), a
-	;ld 		a, (action)
-	;cp 		#4
-	;jr 		z, jumpAction
-	;	doAction:
-	;	ld 		a, boss_x(ix)
-	;	cp 		#0
-	;	jr 		nz, continueAction
-;
-;	;		continueAction:
-;	;		;THINGS
-;	;		dec 	boss_x(ix)
-	;		jr 		quitUpdateBoss
-		jumpAction:
+
+	ld 		a, (action)
+	cp 		#1
+	jr 		nz, jumpNormalAction
+	jumpSuperAction:
+		ld 		a, (boss_mov)
+		cp 		#2
+		jr 		z, moveLeft
+			cp 		#3
+			jr 		z, moveRight
+				ret
+	moveLeft:
+		ld 		a, boss_x(ix)
+		cp 		#2
+		jp 		m, continueMoveLeft
+			
+			dec 	boss_x(ix)
+			dec 	boss_x(ix)
+			jr 		continueBossUpdate
+		continueMoveLeft:
+			ld 		a, #3				
+			ld 		(boss_mov), a
+			ret
+	moveRight:
+		ld 		a, boss_x(ix)
+		cp 		#80-16
+		jp 		nz, continueMoveRight
+			ld 		a, #0				
+			ld 		(boss_mov), a
+
+			ld 		(action), a
+			ld 		a, #25
+			ld 		(boss_time_action), a
+			ret
+		continueMoveRight:
+			inc 	boss_x(ix)
+			inc 	boss_x(ix)
+			jr 		continueBossUpdate
+	jumpNormalAction:
 		ld 		a, (boss_mov)
 		cp 		#0
-		jr 		z, moveTop
+		jr 		z, moveBot
+			cp 		#1
+			jr 		z, moveTop
 		moveBot:
 		inc 	boss_y(ix)
 		jr 		continueBossUpdate
 		moveTop:
 		dec		boss_y(ix)
+		jr 		continueBossUpdate
 		continueBossUpdate:
 		ld 		a, boss_y(ix)
 		cp 		#0
 		jr 		z, swapModeBoss
 			cp 		#120
 			jr 		z, swapModeBoss
-			ret
+				jr 		quitUpdateBoss
 		swapModeBoss:
 		ld 		a, (boss_mov)
 		cp 		#0
@@ -138,6 +166,7 @@ eraseBossMark::
 		ld 		a, #0x00
 		call 	cpct_drawSolidBox_asm
 
+
 		call 	swapGameMode
 
 	ret
@@ -179,12 +208,20 @@ jr 		nz, quitBossTimer
 		;ld 		(boss_time_action), a
 		ld 		a, #1
 		ld 		(action), a
+		ld 		a, #2
+		ld 		(boss_mov), a
 	quitBossTimer:
 	ret
 initBoss::
 		ld 		ix, #boss_data
-		ld 		a, #10
+		ld 		a, #30
 		ld 		boss_alive(ix), a
+		ld 		a, #62
+		ld 		boss_x(ix), a
+		ld 		boss_SX(ix), a
+		ld 		a, #50
+		ld 		boss_y(ix), a
+		ld 		boss_SY(ix), a
 	ret
 killBoss::
 	ret

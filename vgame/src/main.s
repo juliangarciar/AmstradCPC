@@ -12,14 +12,19 @@
 .include "hud.h.s"
 .include "mainMode.h.s"
 .include "boss.h.s"
+.include "shortcuts.h.s"
+.include "bomb.h.s"
 .globl 	_sprite_palette
 ;.globl _song_ingame
 
 unavariable: .db #12
-gameMode:: 	 .db #0
+gameMode:: 	 .db #-1
 totalKills:: .db #0
 totalLeaks:: .db #9
 .area _CODE
+;WEIRD THING
+restartGame::
+	jp 		startGame
 ;========================
 ; 	INTERRUPTS
 ;
@@ -53,18 +58,24 @@ totalLeaks:: .db #9
 		; CHECKS
 		;=============
 		call 	cpct_scanKeyboard_if_asm
-		call 	checkTimer
+		
 		call 	checkShotTime
+		call 	checkBomb
 
 		ld 		a, (gameMode)
 		cp 		#0
-		jr 		nz, checkBoss
+		jr 		z, GameMode0
+			cp 		#1
+			jr 		z, GameMode1
+			 	jr 		return
+		GameMode0:
 			call 	checkEnemy
-		checkBoss:
+			call 	checkTimer
+			jr 		return
+		GameMode1:
 			call 	checkBossTimer
 			call 	checkBossAnimationTimer
-		return:
-		
+	return:
 	ret
 ;========================
 ; 	INIT THE GAME
@@ -81,7 +92,7 @@ totalLeaks:: .db #9
 		call 	cpct_setPalette_asm
 
 		ld 		l, #16
-		ld 		h, #5
+		ld 		h, #0
 		call 	cpct_setPALColour_asm
 		;ld 		de, #_song_ingame
 		;call 	cpct_akp_musicInit_asm
@@ -93,8 +104,31 @@ totalLeaks:: .db #9
 ;
 ;========================
 	initData:
-		;
-		;call 	initEnemies
+		call 	initHero
+		call 	initShots
+		call 	initEnemies
+
+		ld 		a, #0
+		ld 		(gameMode), a
+		call 	updateLifes
+		call 	updateLeaks
+		call 	updateBomb
+		call 	initBoss
+		call 	initHUD
+		call 	waitLoad
+	ret
+;========================
+; 	WAIT 
+;
+;========================
+	waitLoad:
+		ld 		a, #256
+		waitBucle:
+		cp  	#1
+		jr 		z, quitWait
+			dec 	a
+			jr 		waitBucle
+	quitWait:
 	ret
 ;========================
 ; 	SWAP THE GAME MODE
@@ -110,14 +144,31 @@ totalLeaks:: .db #9
 			call 	swapShotMode
 			ld 		a, #0
  			ld 		(totalKills), a
+ 			call 	heroPtrX
 
- 			jr 		mode0
+ 			ld 		a, hero_lives(ix)
+ 			cp 		#9
+ 			jr 		z, jumpIncLives
+ 				inc 	hero_lives(ix)
+ 			jumpIncLives:
+ 			ld 		a, hero_bombs(ix)
+ 			cp 		#9
+ 			jr 		z, jumpIncBombs
+ 				inc 	hero_bombs(ix)
+ 			jumpIncBombs:
+ 			ld 		a, #9
+ 			ld 		(totalLeaks), a
+ 			call 	updateLifes
+ 			call 	updateBomb
+ 			call 	updateLeaks
+ 			jp 		mode0
 		swapMode0:
+			call 	killAll
 			ld 		a, #1
 			ld 		(gameMode), a
 			call 	swapShotMode
 			call 	initBoss
-			jr 		mode1
+			jp		mode1
  	quitSwapMode:
  		
  	ret
@@ -141,16 +192,17 @@ totalLeaks:: .db #9
 		;=============
 		ld 		hl, #isr
 		call 	cpct_setInterruptHandler_asm
-		startGame::
+		
 		;=============
 		;INIT INTERFACE
 		;=============
+		startGame:
 		call 	initializeVideoMemory
 		call 	drawMap1 ;; COOO
 		call 	drawMap2 ;; 8000
-		call 	initHUD
+		call 	initData
 		
-		;call 	waitLoad
+		
 			main_bucle:
 			;=============
 			; NORMAL MODE 
@@ -174,11 +226,18 @@ totalLeaks:: .db #9
 				
 				;===================
 				; SWAP TO BOSS MODE
-				;===================
+				;===================s
 				ld 		a, (totalKills)
-				cp 		#10
-				jr 		nz, notChangeBoss	
-					call 	killAll
+				cp 		#40
+				jp 		m, notChangeBoss
+					call 	shotPtrX
+					ld 		a, shot_x(ix)
+					ld 		shot_SX(ix), a
+					call 	eraseShotMark
+					call 	heroPtrX
+					ld 		a, hero_x(ix)
+					ld 		hero_SX(ix), a
+					call 	eraseHero
 					call 	swapGameMode
 
 				notChangeBoss:
@@ -191,7 +250,12 @@ totalLeaks:: .db #9
 
 				call 	cpct_waitVSYNC_asm
 				call	toggleVideoMemory
-				jr 		mode0
+
+				ld 		a, (gameMode)
+				cp 		#3
+
+				jr 		nz, mode0
+					jp 		restartGame
 			;=============
 			; BOSS MODE 
 			;=============
@@ -210,15 +274,6 @@ totalLeaks:: .db #9
 				call 	updateHeroMode1
 					call 	checkUserInput
 
-				;====================
-				; SWAP TO NORMAL MODE
-				;====================
-				;ld 		a, (totalKills)
-				;cp 		#10
-				;jr 		nz, notChangeBoss
-				;	ld 		a, #0
-				;	ld 		(gameMode), a
-				;	call 	killAll
 				notChangeNormal:
 				;=============
 				; DRAW 
@@ -231,6 +286,10 @@ totalLeaks:: .db #9
 				;=============
 				call 	cpct_waitVSYNC_asm
 				call	toggleVideoMemory
-				jr 		mode1
+				ld 		a, (gameMode)
+				cp 		#3
+
+				jr 		nz, mode1
+					jp 		restartGame
 		ret
 

@@ -220,3 +220,19 @@ swapShotMode::
 			inc 	a
 			ld 		(shot_mode), a
 		ret
+
+initShots::
+	ld 		ix, #shot_data
+	initShotsBucle:
+	call 	eraseShot
+	ld 		a, #0
+	ld 		shot_alive(ix), a
+	ld 		(shot_mode), a
+	ld 		a, shot_last(ix)
+	cp 		#1
+	jr 		z, quitInitShot
+		ld 		bc, #10
+		add 	ix, bc
+		jr 		initShotsBucle
+	quitInitShot:
+	ret

@@ -279,7 +279,11 @@ killAll::
 		ld 		a, #0
 		ld 		enemy_alive(iy), a
 		call 	eraseEnemyMark
-		
+		ld 		a, (totalKills)
+		cp 		#40
+		jr 		z, nextEnemyKill
+			inc 	a
+			ld 		(totalKills), a
 	nextEnemyKill:
 		ld 		a, obs_l(iy)
 		cp 		#1
