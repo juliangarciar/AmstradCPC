@@ -15,7 +15,7 @@
 .include "shortcuts.h.s"
 .include "bomb.h.s"
 .globl 	_sprite_palette
-;.globl _song_ingame
+.globl _song_ingame
 
 unavariable: .db #12
 gameMode:: 	 .db #-1
@@ -43,7 +43,7 @@ restartGame::
 		push 	hl
 		push 	iy
 		
-			;call 	cpct_akp_musicPlay_asm
+			call 	cpct_akp_musicPlay_asm
 			ld 		a, #12
 			ld 		(unavariable), a
 		
@@ -94,8 +94,8 @@ restartGame::
 		ld 		l, #16
 		ld 		h, #0
 		call 	cpct_setPALColour_asm
-		;ld 		de, #_song_ingame
-		;call 	cpct_akp_musicInit_asm
+		ld 		de, #_song_ingame
+		call 	cpct_akp_musicInit_asm
 
 
 	ret
