@@ -7,3 +7,4 @@
 .globl checkTimer
 .globl eraseEnemyMark
 .globl killAll
+.globl initEnemies

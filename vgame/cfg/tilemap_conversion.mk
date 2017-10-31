@@ -56,6 +56,8 @@
 #$(eval $(call TMX2C,img/tilemap.tmx,g_tilemap,src/,4))
 #NIVEL1
 $(eval $(call TMX2C,assets/map.tmx,map1,src/niveles,))
+#$(eval $(call TMX2C,assets/gameover.tmx,gameover1,src/niveles,))
+#$(eval $(call TMX2C,assets/gameover.tmx,gameover1,src/niveles,))
 ## Convert img/level0b.tmx to src/levels/level0b.c and src/levels/level0b.h
 ##		This file contains another tilemap created with Tiled. This macro 
 ## will convert the tilemap into a C bitarray of 4-bits per item. The array

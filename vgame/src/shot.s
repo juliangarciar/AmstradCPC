@@ -16,6 +16,7 @@ defineShot shot6, 3, 5, 0
 .globl _sprite_def2
 .globl _sprite_def3
 
+shot_mode: .db #0
 .area _CODE
 
 drawShot::
@@ -37,16 +38,16 @@ drawShot::
 			jr 		z, Shot1Draw
 				cp 		#1
 				jr 		z, Shot2Draw
-					cp 		#2
-					jr 		z, Shot3Draw
-			Shot1Draw:
-				ld 		hl, #_sprite_def1
-				jp 		continueShotDraw
-			Shot2Draw:
-				ld 		hl, #_sprite_def2
-				jp 		continueShotDraw
+
 			Shot3Draw:
 				ld 		hl, #_sprite_def3
+				jr 		continueShotDraw
+			Shot1Draw:
+				ld 		hl, #_sprite_def1
+				jr 		continueShotDraw
+			Shot2Draw:
+				ld 		hl, #_sprite_def2
+				
 			continueShotDraw:
 				ld 		b, shot_h(ix)
 				ld 		c, shot_w(ix)
@@ -59,7 +60,6 @@ drawShot::
 				ld 		bc, #10
 				add 	ix, bc
 				jr 		drawShotBucle
-		ret
 eraseShot::
 	ld 		ix, #shot_data
 	eraseShotBucle:
@@ -88,7 +88,6 @@ eraseShot::
 				ld 		bc, #10
 				add 	ix, bc
 				jr 		eraseShotBucle
-		ret
 updateShot::
 	ld 		ix, #shot_data
 	updateShotBucle:
@@ -96,48 +95,57 @@ updateShot::
 		cp 		#0							;if(yes) then continue update
 		jr 		z, jumpNextShotUpdate 		;else load next shot
 
+			;WTF
 			ld 		a, shot_x(ix) 			;Load shot position in X
-			cp 		#80-5 					;check if the shot is in the screen limit
-			jr 		z, destroyShot 			;if(yes) then destroy it
-			cp 		#80-4 					;
-			jr 		z, destroyShot 			;else continue update
-			cp 		#80-3 					;^
-			jr 		z, destroyShot 			;^
+			cp 		#80-4					;check if the shot is in the screen limit
+			jp 		m, checkCollisions		;if(yes) then destroy it
+				jr 		destroyShot		 	;else continue update
 
- 			call 	checkCollision			;Check if the shot collides with an enemy
+			checkCollisions:
+				ld 		a, (shot_mode)
+				cp 		#0 
+				jr 		z, shot0
+				shot1:
+					call 	checkCollisionMode1
+					jr 		collisionChecked
+ 			shot0:
+ 				call 	checkCollisionMode0		;Check if the shot collides with an enemy
+
+ 			collisionChecked:
 			cp 		#1						;if(yes) then destroy the shot
 			jr 		z, destroyShot			;else continue update 
 
-			ld 		a, shot_x(ix) 			;Update last position
-			ld 		shot_SX(ix), a 			;^
+				ld 		a, shot_x(ix) 			;Update last position
+				ld 		shot_SX(ix), a 			;^
 
-			ld 		a, shot_timer(ix) 		;Check if the timer is active
-			cp 		#0 						;if(yes) then continue update 
-			jr 		z, continueUpdateShot 	;else load next shot
+				ld 		a, shot_timer(ix) 		;Check if the timer is active
+				cp 		#0 						;if(yes) then continue update 
+				jr 		z, continueUpdateShot 	;else load next shot
  											
-				dec 	shot_timer(ix) 		;Update shot timer
-				jr 		jumpNextShotUpdate  ;load next shot
+					dec 	shot_timer(ix) 			;Update shot timer
+					jr 		jumpNextShotUpdate  	;load next shot
 			continueUpdateShot:
 				inc 	shot_timer(ix)
-				inc 	shot_x(ix)
-				inc 	shot_x(ix)
-				inc 	shot_x(ix)
+				ld 		a, shot_x(ix)
+				add 	a, #4
+				ld  	shot_x(ix), a
+
 				ld 		a, shot_sprite(ix)
 				cp 		#2
 				jr 		z, swap1
-					inc 	a
-					ld 		shot_sprite(ix), a
+					
+					inc 	shot_sprite(ix)
 					jr 		jumpNextShotUpdate
-				swap1:
+			swap1:
 				ld 		a, #0
 				ld 		shot_sprite(ix), a
 				jr 		jumpNextShotUpdate
+			
 			destroyShot:
-			ld 		a, #0
-			ld 		shot_alive(ix), a
-			ld 		a, enemy_x(ix)
-			ld 		enemy_SX(ix), a
-			call 	eraseShotMark
+				dec 	shot_alive(ix)
+				ld 		a, enemy_x(ix)
+				ld 		enemy_SX(ix), a
+				call 	eraseShotMark
 		jumpNextShotUpdate:
 			ld 		a, shot_last(ix)
 			cp 		#1
@@ -145,7 +153,6 @@ updateShot::
 				ld 		bc, #10
 				add 	ix, bc
 				jr 		updateShotBucle
-		ret
 checkShot::
 	ld 		ix, #shot_data
 	checkShotBucle:
@@ -154,18 +161,18 @@ checkShot::
 		jr 		z, jumpNextShotCheck
 			;haz cosas
 			call 	heroPtrY
-			ld 		a, #1
-			ld 		shot_alive(ix), #1
+			
+			inc 	shot_alive(ix)
 
 			ld 		a, hero_x(iy)
 			ld 		shot_x(ix), a
 			ld 		shot_SX(ix), a
+
 			ld 		a, hero_y(iy)
-			ld 		shot_SY(ix), a
 			add 	a, #4
 			ld 		shot_y(ix), a
 			
-			ret
+		ret
 		jumpNextShotCheck:
 			ld 		a, shot_last(ix)
 			cp 		#1
@@ -173,7 +180,6 @@ checkShot::
 				ld 		bc, #10
 				add 	ix, bc
 				jr 		checkShotBucle
-	ret
 shotPtrX::
 	ld 		ix, #shot_data
 	ret
@@ -203,3 +209,14 @@ eraseShotMark::
 		ld 		a, #0x00
 		call 	cpct_drawSolidBox_asm
 	ret
+swapShotMode::
+		ld 		a, (shot_mode)
+		cp 		#0
+		jr 		z, changeMode
+			dec 	a
+			ld 		(shot_mode), a
+		ret
+		changeMode:
+			inc 	a
+			ld 		(shot_mode), a
+		ret

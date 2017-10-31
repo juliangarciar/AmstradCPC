@@ -20,7 +20,7 @@ moveHeroRight:
 	call 	heroPtrX
 
 	ld 		a, hero_x(ix)	; ld a, (heroX)
-	cp 		#80-4 			;Right limit
+	cp 		#80-8 			;Right limit
 	ret 	z  				;hero_x = limite pantalla dcha, no mover
 		
 		inc 	hero_x(ix)

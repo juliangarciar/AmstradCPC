@@ -1,4 +1,5 @@
 .globl initHUD
 .globl updateLifes
 .globl updateBomb
-.globl updateScore
+.globl updateLeaks
+;.globl gameOver

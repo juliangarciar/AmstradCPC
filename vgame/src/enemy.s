@@ -2,13 +2,15 @@
 .include "shortcuts.h.s"
 .include "cpctelera.h.s"
 .include "buffer.h.s"
+.include "mainMode.h.s"
+.include "hud.h.s"
 
 defineEnemy enemy , 8, 16, 0, 2
 defineEnemy enemy2, 8, 16, 0, 1
 defineEnemy enemy3, 8, 16, 0, 2
 defineEnemy enemy4, 8, 16, 0, 1
 defineEnemy enemy5, 8, 16, 1, 2
-defineEnemy enemy6, 8, 16, 0, 1
+;defineEnemy enemy6, 8, 16, 0, 1
 
 enemyTime: .db #10
 enemyHigh: .db #0
@@ -48,8 +50,18 @@ drawEnemy::
 					jr 		z, Enemy3Draw
 						cp 		#3
 						jr 		z, Enemy4Draw
-							cp 		#4
-							jr 		z, Enemy5Draw
+							;cp 		#4
+							;jr 		z, Enemy5Draw
+			Enemy5Draw:
+				ld 		a, enemy_max(ix)
+				cp 		#1
+				jr   	z, Draw5Type1
+					ld 		hl, #_sprite_enemy34
+					jr 		continueEnemyDraw
+				Draw5Type1:
+				ld 		hl, #_sprite_enemy24
+				jr 		continueEnemyDraw
+
 			Enemy1Draw:
 				ld 		a, enemy_max(ix)
 				cp 		#1
@@ -59,6 +71,7 @@ drawEnemy::
 				Draw1Type1:
 				ld 		hl, #_sprite_enemy21
 				jr 		continueEnemyDraw
+
 			Enemy2Draw:
 				ld 		a, enemy_max(ix)
 				cp 		#1
@@ -68,6 +81,7 @@ drawEnemy::
 				Draw2Type1:
 				ld 		hl, #_sprite_enemy22
 				jr 		continueEnemyDraw
+
 			Enemy3Draw:
 				ld 		a, enemy_max(ix)
 				cp 		#1
@@ -77,6 +91,7 @@ drawEnemy::
 				Draw3Type1:
 				ld 		hl, #_sprite_enemy23
 				jr 		continueEnemyDraw
+
 			Enemy4Draw:
 				ld 		a, enemy_max(ix)
 				cp 		#1
@@ -85,15 +100,8 @@ drawEnemy::
 					jr 		continueEnemyDraw
 				Draw4Type1:
 				ld 		hl, #_sprite_enemy22
-				jr 		continueEnemyDraw
-			Enemy5Draw:
-				ld 		a, enemy_max(ix)
-				cp 		#1
-				jr   	z, Draw5Type1
-					ld 		hl, #_sprite_enemy34
-					jr 		continueEnemyDraw
-				Draw5Type1:
-				ld 		hl, #_sprite_enemy24
+				;jr 		continueEnemyDraw
+			
 			continueEnemyDraw:
 				ld 		b, enemy_h(ix)
 				ld 		c, enemy_w(ix)
@@ -155,8 +163,6 @@ updateEnemy::
 				jr 		jumpNextEnemyUpdate
 			updateContinue:
 				inc 	enemy_timer(iy)
-			
-				
 				dec 	enemy_x(iy)
 				;jr 		jumpNextEnemyUpdate
 				ld 		a, enemy_sprite(iy)
@@ -169,11 +175,15 @@ updateEnemy::
 				ld 		enemy_sprite(iy), a
 				jr 		jumpNextEnemyUpdate
 			destroyEnemy:
-			ld 		a, #0
-			ld 		enemy_alive(iy), a
-			ld 		a, enemy_x(iy)
-			ld 		enemy_SX(iy), a
-			call 	eraseEnemyMark
+				ld 		a, #0
+				ld 		enemy_alive(iy), a
+				ld 		a, enemy_x(iy)
+				ld 		enemy_SX(iy), a
+				ld 		a, (totalLeaks)
+				dec 	a
+				ld 		(totalLeaks), a
+				call 	updateLeaks
+				call 	eraseEnemyMark
 		jumpNextEnemyUpdate:
 			ld 		a, enemy_last(iy)
 			cp 		#1
@@ -201,7 +211,7 @@ checkEnemy::
 			ld 		a, (enemyHigh)
 			ld 		enemy_y(ix), a
 			;NECESARIO?¿
-			ld 		enemy_SY(ix), a
+			;ld 		enemy_SY(ix), a
 			ld 		a, #10
 			ld 		(enemyTime), a
 			jr 		quitCheckEnemy
@@ -213,7 +223,7 @@ checkEnemy::
 				add 	ix, bc
 				jr 		activateBucle
 		forceRestart:
-			ld 		a, #33
+			ld 		a, #10
 			ld 		(enemyTime), a
 	quitCheckEnemy:
 	ret
@@ -230,7 +240,6 @@ checkTimer::
 	add 	a, b
 	cp 		#200-64
 	jr 		nz, quitTimer
-
 		ld 		a, #0
 	quitTimer:
 	ld 		(enemyHigh), a
@@ -283,4 +292,20 @@ killAll::
 		ld 		bc, #11
 		add 	iy, bc
 		jr		killBucle
+	
+initEnemies::
+	ld 		ix, #enemy_data
+	initEnemiesBucle:
+	ld 		a, #0
+	ld 		enemy_alive(ix), a
+	ld 		(enemyHigh), a
+	ld 		a, #10
+	ld 		(enemyTime), a
+	ld 		a, enemy_last(ix)
+	cp 		#0
+	jr 		z, quitInitEnemies
+		ld 		bc, #11
+		add 	iy, bc
+		jr		initEnemiesBucle
+	quitInitEnemies:
 	ret

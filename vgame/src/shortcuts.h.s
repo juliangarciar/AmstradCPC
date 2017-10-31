@@ -17,8 +17,8 @@
 		name'Spr: 	.db #0
 		name'SX: 	.db x
 		name'SY: 	.db y
-		name'Lives: .db #3
-		name'Bombs: .db #1
+		name'Lives: .db #9
+		name'Bombs: .db #3
 .endm
 	.equ	hero_x, 0
 	.equ	hero_y, 1
@@ -128,7 +128,32 @@
 	.equ 	enemy_SY, 8
 	.equ 	enemy_max, 9
 	.equ 	enemy_timer, 10
-
+;====================
+;	BOSS CREATION
+;====================
+.macro defineBoss name, x, y, w, h, l
+	name'_data:
+		name'X: 	.db x
+		name'Y: 	.db y
+		name'W: 	.db w
+		name'H: 	.db h
+		name'Spr: 	.db #0
+		name'Alive: .db #0
+		name'Last: 	.db l
+		name'SX: 	.db x
+		name'SY: 	.db y
+		name'Timer: .db #1
+.endm
+	.equ	boss_x, 0
+	.equ	boss_y, 1
+	.equ	boss_w, 2
+	.equ	boss_h, 3
+	.equ 	boss_sprite, 4
+	.equ 	boss_alive, 5
+	.equ 	boss_last, 6
+	.equ 	boss_SX, 7
+	.equ 	boss_SY, 8
+	.equ 	boss_timer, 9
 ;=========================================
 ; 	USEFULL MACROS
 ;=========================================

@@ -16,4 +16,5 @@ useBomb::
 		call 	killAll
 		jr 		bombAnimation
 bombAnimation:
+
 	ret

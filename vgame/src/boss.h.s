@@ -1,0 +1,10 @@
+.globl eraseBoss
+.globl updateBoss
+.globl drawBoss
+.globl bossPtrY
+.globl bossPtrX
+.globl eraseBossMark
+.globl killBoss
+.globl initBoss
+.globl checkBossTimer
+.globl checkBossAnimationTimer

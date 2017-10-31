@@ -89,4 +89,13 @@ $(eval $(call IMG2SPRITES,assets/hero12.png,0,sprite,16,16,$(PALETTE),,src/sprit
 
 $(eval $(call IMG2SPRITES,assets/bomb.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
 
+$(eval $(call IMG2SPRITES,assets/boss1.png,0,sprite,32,32,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/boss2.png,0,sprite,32,32,$(PALETTE),,src/sprites,))
+
+$(eval $(call IMG2SPRITES,assets/gameover.png,0,sprite,64,64,$(PALETTE),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/outEnemy.png,0,sprite,16,16,$(PALETTE),,src/sprites,))
+
 $(eval $(call IMG2SPRITES,assets/tileset32x32.png,0,g,4,4,$(PALETTE),tileset,src/sprites,))
+
+
+#$(eval $(call IMG2SPRITES,assets/tileset4x4.png,0,k,1,1,$(PALETTE),tileset,src/sprites,))
